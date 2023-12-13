@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# Change to your application's directory
+cd samanvaysamiti_backend
+
+# Pull the latest code from the repository
+git pull origin main
+
+# Install or update dependencies
+npm install
+
+# Build the application (if needed)
+npm run build
+
+# Restart your application (replace 'your-app' with the actual script or server start command)
+pm2 restart dist/app.js
