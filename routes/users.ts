@@ -17,5 +17,4 @@ router.post("/signup-verify-otp", signupVerifyOTP);
 router.get("/get-profile", verifyToken, getProfile);
 router.get("/user-detail/:id", getUser);
 
-
 module.exports = router;
