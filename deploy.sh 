@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Change to your application's directory
-cd samanvaysamiti_backend
-
 # Pull the latest code from the repository
 git pull origin main
 
