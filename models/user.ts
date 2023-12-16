@@ -3,7 +3,7 @@ import mongoose, { Schema, SchemaTypes } from "mongoose";
 let userSchema = new Schema({
   serial_no: {
     type: String,
-    required: true,
+    required: false,
   },
   phone: {
     type: String,
@@ -18,6 +18,9 @@ let userSchema = new Schema({
   referred_by:{
     type: String,
   },
+  downloaded_profiles_count: { type: Number, default: 0 },
+  call_profiles_count: { type: Number, default: 0 },
+  whatsapp_profiles_count: { type: Number, default: 0 },
   personal_details: {
     fullname: {
       type: String,

@@ -6,109 +6,139 @@ import { z } from "zod";
 const userSchema = z.object({
   phone: z.string(),
   email: z.string().email(),
-  personal_details: z.object({
-    fullname: z.string().min(3).max(20),
-    gender: z.string(),
-    birth_date: z.string(),
-    birth_time: z.string(),
-    birth_place: z.string(),
-    height: z.string(),
-    blood_group: z.string(),
-    weight: z.string(),
-    gotra: z.string(),
-    kuldevi: z.string(),
-  }),
-  educational_details: z.object({
-    education_level: z.string(),
-    education_detail: z.string(),
-    special_education: z.string(),
-    special_information: z.string(),
-  }),
-  professional_details: z.object({
-    professiona: z.string(),
-    job_title: z.string(),
-    company_name: z.string(),
-    job_address: z.string(),
-    weekly_holiday: z.string(),
-    monthly_income: z.string(),
-    payment_currency: z.string(),
-  }),
-  contact_details: z.object({
-    mobile: z.string().max(10),
-    phone: z.string().max(10),
-    email: z.string(),
-    current_address: z.string(),
-    partner_expectations: z.string(),
-  }),
-  family_details: z.object({
-    fathers_name: z.string(),
-    guardians_profession: z.string(),
-    designation: z.string(),
-    address: z.string(),
-    parents_phone: z.string(),
-    mothers_name: z.string(),
-    mothers_phone: z.string(),
-  }),
-  brothers_details: z.object({
-    brother_unmarried: z.string(),
-    brother_married: z.string(),
-    father_in_lows_name: z.string(),
-    father_in_lows_phone: z.string(),
-  }),
-  sisters_details: z.object({
-    sisters_unmarried: z.string(),
-    sisters_married: z.string(),
-    brothers_in_lows_name: z.string(),
-    brothers_in_lows_phone: z.string(),
-  }),
-  fathers_family_details: z.object({
-    grandfather_name: z.string(),
-    grandfather_village: z.string(),
-    kaka_name: z.string(),
-    kaka_village: z.string(),
-    kaka_phone: z.string(),
-    fuva_name: z.string(),
-    fuva_village: z.string(),
-    fuva_phone: z.string(),
-  }),
-  mothers_family_details: z.object({
-    grandfather_name: z.string(),
-    grandfather_village: z.string(),
-    mama_name: z.string(),
-    mama_village: z.string(),
-    mama_phone: z.string(),
-    mavsa_name: z.string(),
-    mavsa_village: z.string(),
-    mavsa_phone: z.string(),
-  }),
 });
 
 let addUser = async (req: Request, res: Response) => {
   try {
+    console.log("request body------------------------------------>", req.body);
+
     let requestBody = userSchema.parse(req.body);
+
     // Check if the email or phone already exists
     const existingUser = await User.findOne({
       $or: [
-        { email: requestBody.contact_details.email },
-        { phone: requestBody.contact_details.phone },
+        { email: requestBody.email },
+        { phone: requestBody.phone },
       ],
     });
 
     if (existingUser) {
       return res.status(400).json({ message: "Email or phone already exists" });
     }
+
+    const personalDetailsRequest = req.body.personal_details;
+
+    const personalDetails = {
+      fullname: personalDetailsRequest.fullname,
+      gender: personalDetailsRequest.gender,
+      birth_date: personalDetailsRequest.birth_date,
+      birth_time: personalDetailsRequest.birth_time,
+      birth_place: personalDetailsRequest.birth_place,
+      height: personalDetailsRequest.height,
+      blood_group: personalDetailsRequest.blood_group,
+      weight: personalDetailsRequest.weight,
+      gotra: personalDetailsRequest.gotra,
+      kuldevi: personalDetailsRequest.kuldevi,
+    };
+
+    const educationDetailsRequest = req.body?.educational_details;
+
+    const educationDetails = {
+      education_level: educationDetailsRequest?.education_level,
+      education_detail: educationDetailsRequest?.education_detail,
+      special_education: educationDetailsRequest?.special_education,
+      special_information: educationDetailsRequest?.special_information,
+    };
+
+    const professionalDetailsRequest = req.body.professional_details;
+
+    const professionalDetails = {
+      professiona: professionalDetailsRequest?.professiona,
+      job_title: professionalDetailsRequest?.job_title,
+      company_name: professionalDetailsRequest?.company_name,
+      job_address: professionalDetailsRequest?.job_address,
+      weekly_holiday: professionalDetailsRequest?.weekly_holiday,
+      monthly_income: professionalDetailsRequest?.monthly_income,
+      payment_currency: professionalDetailsRequest?.payment_currency,
+    };
+
+    const contactDetailsRequest = req.body.contact_details;
+
+    const contactDetails = {
+      mobile: contactDetailsRequest?.mobile,
+      phone: contactDetailsRequest?.phone,
+      email: contactDetailsRequest?.email,
+      current_address: contactDetailsRequest?.current_address,
+      partner_expectations: contactDetailsRequest?.partner_expectations,
+    };
+
+    const familyDetailsRequest = req.body.family_details;
+
+    const familyDetails = {
+      fathers_name: familyDetailsRequest?.fathers_name,
+      guardians_profession: familyDetailsRequest?.guardians_profession,
+      designation: familyDetailsRequest?.designation,
+      address: familyDetailsRequest?.address,
+      parents_phone: familyDetailsRequest?.parents_phone,
+      mothers_name: familyDetailsRequest?.mothers_name,
+      mothers_phone: familyDetailsRequest?.mothers_phone,
+    };
+
+    const brotherDetailsRequest = req.body.brothers_details;
+
+    const brotherDetails = {
+      brother_unmarried: brotherDetailsRequest?.brother_unmarried,
+      brother_married: brotherDetailsRequest?.brother_married,
+      father_in_lows_name: brotherDetailsRequest?.father_in_lows_name,
+      father_in_lows_phone: brotherDetailsRequest?.father_in_lows_phone,
+    };
+
+    const sisterDetailsRequest = req.body.sisters_details;
+
+    const sisterDetails = {
+      sisters_unmarried: sisterDetailsRequest?.sisters_unmarried,
+      sisters_married: sisterDetailsRequest?.sisters_married,
+      brothers_in_lows_name: sisterDetailsRequest?.brothers_in_lows_name,
+      brothers_in_lows_phone: sisterDetailsRequest?.brothers_in_lows_phone,
+    };
+
+    const fatherFamilyDetailsRequest = req.body.fathers_family_details;
+
+    const fatherFamilyDetails = {
+      grandfather_name: fatherFamilyDetailsRequest?.grandfather_name,
+      grandfather_village: fatherFamilyDetailsRequest?.grandfather_village,
+      kaka_name: fatherFamilyDetailsRequest?.kaka_name,
+      kaka_village: fatherFamilyDetailsRequest?.kaka_village,
+      kaka_phone: fatherFamilyDetailsRequest?.kaka_phone,
+      fuva_name: fatherFamilyDetailsRequest?.fuva_name,
+      fuva_village: fatherFamilyDetailsRequest?.fuva_village,
+      fuva_phone: fatherFamilyDetailsRequest?.fuva_phone,
+    };
+
+    const motherFamilyDetailsRequest = req.body.mothers_family_details;
+
+    const motherFamilyDetails = {
+      grandfather_name: motherFamilyDetailsRequest?.grandfather_name,
+      grandfather_village: motherFamilyDetailsRequest?.grandfather_village,
+      kaka_name: motherFamilyDetailsRequest?.kaka_name,
+      kaka_village: motherFamilyDetailsRequest?.kaka_village,
+      kaka_phone: motherFamilyDetailsRequest?.kaka_phone,
+      fuva_name: motherFamilyDetailsRequest?.fuva_name,
+      fuva_village: motherFamilyDetailsRequest?.fuva_village,
+      fuva_phone: motherFamilyDetailsRequest?.fuva_phone,
+    };
     let user = new User({
-      phone:requestBody.phone,
-      email:requestBody.email,
-      personal_details: requestBody.personal_details,
-      educational_details: requestBody.educational_details,
-      professional_details: requestBody.professional_details,
-      contact_details: requestBody.contact_details,
-      family_details: requestBody.family_details,
-      brothers_details: requestBody.brothers_details,
-      sisters_details: requestBody.sisters_details,
-      fathers_family_details: requestBody.fathers_family_details,
-      mothers_family_details: requestBody.mothers_family_details,
+      phone: requestBody.phone,
+      email: requestBody.email,
+      personal_details: personalDetails,
+      educational_details: educationDetails,
+      professional_details: professionalDetails,
+      contact_details: contactDetails,
+      family_details: familyDetails,
+      brothers_details: brotherDetails,
+      sisters_details: sisterDetails,
+      fathers_family_details: fatherFamilyDetails,
+      mothers_family_details: motherFamilyDetails,
     });
 
     await user.save();
