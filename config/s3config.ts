@@ -1,6 +1,5 @@
 const AWS = require('aws-sdk');
-
-console.log(process.env.ACCESSKEYID);
+require('dotenv').config()
 
 AWS.config.update({
   accessKeyId:process.env.ACCESSKEYID,
