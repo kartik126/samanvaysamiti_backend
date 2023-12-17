@@ -8,6 +8,8 @@ var logger = require("morgan");
 
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
+var mandalRouter = require("./routes/mandal");
+
 var dbConnect = require("./utils/dbConnect");
 require('dotenv').config()
 
@@ -25,6 +27,8 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
 app.use("/api/users/", usersRouter);
+app.use("/api/mandal/", mandalRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function (req: Request, res: Response, next: NextFunction) {
