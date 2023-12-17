@@ -1,4 +1,5 @@
 import mongoose, { Schema, SchemaTypes } from "mongoose";
+import cron from "node-cron";
 
 let userSchema = new Schema({
   serial_no: {
@@ -19,6 +20,7 @@ let userSchema = new Schema({
     type: String,
   },
   downloaded_profiles_count: { type: Number, default: 0 },
+  lastResetTimestamp: { type: Date, default: Date.now },
   call_profiles_count: { type: Number, default: 0 },
   whatsapp_profiles_count: { type: Number, default: 0 },
   personal_details: {
@@ -57,9 +59,9 @@ let userSchema = new Schema({
     kuldevi: {
       type: String,
     },
-    age:{
+    age: {
       type: String,
-    }
+    },
   },
   educational_details: {
     education_level: {
@@ -168,12 +170,16 @@ let userSchema = new Schema({
     grandfather_village: {
       type: String,
     },
-    kaka: [{
-      type: String,
-    }],
-    fuva: [{
-      type: String,
-    }],
+    kaka: [
+      {
+        type: String,
+      },
+    ],
+    fuva: [
+      {
+        type: String,
+      },
+    ],
   },
   mothers_family_details: {
     grandfather_name: {
@@ -182,12 +188,16 @@ let userSchema = new Schema({
     grandfather_village: {
       type: String,
     },
-    mama:[ {
-      type: String,
-    }],
-    mavsa: [{
-      type: String,
-    }],
+    mama: [
+      {
+        type: String,
+      },
+    ],
+    mavsa: [
+      {
+        type: String,
+      },
+    ],
   },
   featured: {
     type: Boolean,
@@ -219,6 +229,35 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
+// Function to reset downloaded_profiles_count
+userSchema.methods.resetDownloadedProfilesCount = async function () {
+  this.downloaded_profiles_count = 0;
+  this.lastResetTimestamp = new Date();
+  await this.save();
+};
+
 let User = mongoose.model("User", userSchema);
+
+// Schedule a cron job to run every day at midnight
+cron.schedule('0 0 * * *', async () => {
+  try {
+    // Find users whose last reset timestamp is more than 24 hours ago
+    const usersToUpdate = await User.find({
+      lastResetTimestamp: { $lt: new Date(Date.now() - 24 * 60 * 60 * 1000) },
+    });
+
+    // Update the downloaded_profiles_count and lastResetTimestamp for each user
+    const updates = usersToUpdate.map(async (user) => {
+      // @ts-ignore
+      await user.resetDownloadedProfilesCount();
+    });
+
+    await Promise.all(updates);
+
+    console.log('Downloaded profiles count reset for users:', usersToUpdate);
+  } catch (error) {
+    console.error('Error resetting downloaded profiles count:', error);
+  }
+});
 
 export default User;

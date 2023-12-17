@@ -24,6 +24,8 @@ const requestBodySchema = z.object({
 
 let searchUsers = async (req: Request, res: Response) => {
   try {
+
+    const requestBody = req.body || {};
     const {
       gender,
       blood_group,
@@ -40,7 +42,7 @@ let searchUsers = async (req: Request, res: Response) => {
       maxSalary,
       minSalary,
       location,
-    } = requestBodySchema.parse(req.body);
+    } = requestBodySchema.parse(requestBody);
 
     const pipeline = [];
 
