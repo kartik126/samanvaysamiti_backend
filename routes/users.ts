@@ -26,7 +26,7 @@ router.post("/signup-verify-otp", signupVerifyOTP);
 
 router.get("/get-profile", verifyToken, getProfile);
 router.get("/user-detail/:id", getUser);
-router.post("/search-users", verifyToken, searchUsers);
+router.post("/search-users", searchUsers);
 
 router.post("/download-profile", verifyToken, downloadProfile);
 router.post("/call-profile", verifyToken, callCount);
