@@ -1,7 +1,7 @@
 // controllers/profileController.js
 import { Request, Response } from "express";
-import User from "../../models/user";
 import { z } from "zod";
+import User from "../../models/user";
 
 const requestBodySchema = z.object({
   minAge: z.number().optional(),
@@ -20,17 +20,60 @@ const requestBodySchema = z.object({
 });
 
 let searchUsers = async (req: Request, res: Response) => {
-  try {
-    // Use the user's ID obtained from the token
-    const userId = req.body.user._id;
-    // Fetch the user's profile based on the user ID
-    const user = await User.findById(userId).select("-password");
 
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
+  try {
+    const {
+      minAge,
+      maxAge,
+      minHeight,
+      maxHeight,
+      minWeight,
+      maxWeight,
+      minIncome,
+      maxIncome,
+      manglik,
+      complexion,
+      education,
+      location,
+    } = requestBodySchema.parse(req.body);
+
+    const pipeline = [];
+
+    if (minWeight !== undefined || maxWeight !== undefined) {
+      const weightMatch = {
+        $match: {
+          $and: [
+            {
+              $expr: {
+                $or: [
+                  { $eq: [minWeight, undefined] },
+                  { $eq: ["$weight", ""] },
+                  { $gte: [{ $toDouble: "$weight" }, minWeight] },
+                ],
+              },
+            },
+            {
+              $expr: {
+                $or: [
+                  { $eq: [maxWeight, undefined] },
+                  { $eq: ["$weight", ""] },
+                  { $lte: [{ $toDouble: "$weight" }, maxWeight] },
+                ],
+              },
+            },
+          ],
+        },
+      };
+      pipeline.push(weightMatch);
     }
 
-    res.status(200).json({ profile: user });
+      const result = await User.aggregate(pipeline);
+
+    if (!result) {
+      return res.status(200).json({ message: "User not found", result });
+    }
+
+    return res.status(200).json({ success:true, result });
   } catch (error) {
     console.error("Get profile error:", error);
     res.status(500).json({ message: "Internal server error" });

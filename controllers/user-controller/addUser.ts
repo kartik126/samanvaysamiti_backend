@@ -1,6 +1,10 @@
 import { Request, Response } from "express";
 import User from "../../models/user";
 import { z } from "zod";
+import { uploadToS3 } from "../../utils/uploadToS3";
+
+interface FileArray extends Array<Express.Multer.File> {}
+
 
 // Zod schema for request data validation
 const userSchema = z.object({
@@ -16,21 +20,35 @@ let addUser = async (req: Request, res: Response) => {
 
     // Check if the email or phone already exists
     const existingUser = await User.findOne({
-      $or: [
-        { email: requestBody.email },
-        { phone: requestBody.phone },
-      ],
+      $or: [{ email: requestBody.email }, { phone: requestBody.phone }],
     });
 
     if (existingUser) {
       return res.status(400).json({ message: "Email or phone already exists" });
     }
 
+ 
+    // Explicit type assertion for req.files
+    const files = req.files as FileArray;
+
+    // Upload multiple images to S3
+    const imageBuffers = files?.map(file => file.buffer);
+
+    if (!imageBuffers || imageBuffers.length === 0) {
+      return res.status(404).json({ message: "Please provide profile images" });
+    }
+
+    const photoUrls = await Promise.all(
+      imageBuffers.map(async buffer => await uploadToS3(requestBody.email, buffer))
+    );
+
+
     const personalDetailsRequest = req.body.personal_details;
 
     const personalDetails = {
       fullname: personalDetailsRequest.fullname,
       gender: personalDetailsRequest.gender,
+      photo:photoUrls ,
       birth_date: personalDetailsRequest.birth_date,
       birth_time: personalDetailsRequest.birth_time,
       birth_place: personalDetailsRequest.birth_place,

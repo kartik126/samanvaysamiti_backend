@@ -12,10 +12,10 @@ let userSchema = new Schema({
   email: {
     type: String,
   },
-  otp:{
+  otp: {
     type: String,
   },
-  referred_by:{
+  referred_by: {
     type: String,
   },
   downloaded_profiles_count: { type: Number, default: 0 },
@@ -31,7 +31,7 @@ let userSchema = new Schema({
       type: String,
     },
     photo: {
-      type: String,
+      type: [String],
     },
     birth_date: {
       type: String,

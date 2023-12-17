@@ -17,10 +17,10 @@ var router = express.Router();
 const multer = require("multer");
 
 const storage = multer.memoryStorage(); // Store the image in memory
-const upload = multer({ storage: storage });
+const upload = multer({ storage: storage , limits:{files:5}});
 
 router.post("/send-otp", sendOTP);
-router.post("/register", upload.single("photo"),addUser);
+router.post("/register", upload.array('photo',5),addUser);
 router.post("/verify-otp", verifyOTP);
 router.post("/signup-verify-otp", signupVerifyOTP);
 

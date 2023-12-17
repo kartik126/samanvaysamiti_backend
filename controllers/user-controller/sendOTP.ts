@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
-import User from "../../models/user";
+
 import { z } from "zod";
 import { generateOTP } from "../../helpers/generateOTP";
+import User from "../../models/user";
 
 let requestBodySchema = z.object({
   email: z.string().email().optional(),

@@ -5,9 +5,9 @@ import User from "../../models/user";
 let getUser = async (req: Request, res: Response) => {
   try {
     // Use the user's ID obtained from the token
-    const userId = req.body.user._id;
+    const userId = req.params.id;
     // Fetch the user's profile based on the user ID
-    const user = await User.findById(userId).select("-password");
+    const user = await User.findById(userId);
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
