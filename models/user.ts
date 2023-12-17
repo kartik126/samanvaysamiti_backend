@@ -57,6 +57,9 @@ let userSchema = new Schema({
     kuldevi: {
       type: String,
     },
+    age:{
+      type: String,
+    }
   },
   educational_details: {
     education_level: {
@@ -73,7 +76,7 @@ let userSchema = new Schema({
     },
   },
   professional_details: {
-    professiona: {
+    profession: {
       type: String,
     },
     job_title: {
@@ -99,13 +102,6 @@ let userSchema = new Schema({
     mobile: {
       type: String,
       maxlength: 10,
-    },
-    phone: {
-      type: String,
-      maxlength: 10,
-    },
-    email: {
-      type: String,
     },
     current_address: {
       type: String,
@@ -146,13 +142,11 @@ let userSchema = new Schema({
     brother_married: {
       type: String,
     },
-    father_in_lows_name: {
-      type: String,
-    },
-    father_in_lows_phone: {
-      type: String,
-      maxlength: 10,
-    },
+    father_in_lows_name_phone: [
+      {
+        type: String,
+      },
+    ],
   },
   sisters_details: {
     sisters_unmarried: {
@@ -161,13 +155,11 @@ let userSchema = new Schema({
     sisters_married: {
       type: String,
     },
-    brothers_in_lows_name: {
-      type: String,
-    },
-    brothers_in_lows_phone: {
-      type: String,
-      maxlength: 10,
-    },
+    brothers_in_lows_name_phone: [
+      {
+        type: String,
+      },
+    ],
   },
   fathers_family_details: {
     grandfather_name: {
@@ -176,26 +168,12 @@ let userSchema = new Schema({
     grandfather_village: {
       type: String,
     },
-    kaka_name: {
+    kaka: [{
       type: String,
-    },
-    kaka_village: {
+    }],
+    fuva: [{
       type: String,
-    },
-    kaka_phone: {
-      type: String,
-      maxlength: 10,
-    },
-    fuva_name: {
-      type: String,
-    },
-    fuva_village: {
-      type: String,
-    },
-    fuva_phone: {
-      type: String,
-      maxlength: 10,
-    },
+    }],
   },
   mothers_family_details: {
     grandfather_name: {
@@ -204,26 +182,12 @@ let userSchema = new Schema({
     grandfather_village: {
       type: String,
     },
-    mama_name: {
+    mama:[ {
       type: String,
-    },
-    mama_village: {
+    }],
+    mavsa: [{
       type: String,
-    },
-    mama_phone: {
-      type: String,
-      maxlength: 10,
-    },
-    mavsa_name: {
-      type: String,
-    },
-    mavsa_village: {
-      type: String,
-    },
-    mavsa_phone: {
-      type: String,
-      maxlength: 10,
-    },
+    }],
   },
   featured: {
     type: Boolean,

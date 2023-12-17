@@ -5,7 +5,6 @@ import { uploadToS3 } from "../../utils/uploadToS3";
 
 interface FileArray extends Array<Express.Multer.File> {}
 
-
 // Zod schema for request data validation
 const userSchema = z.object({
   phone: z.string(),
@@ -27,28 +26,28 @@ let addUser = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "Email or phone already exists" });
     }
 
- 
     // Explicit type assertion for req.files
     const files = req.files as FileArray;
 
     // Upload multiple images to S3
-    const imageBuffers = files?.map(file => file.buffer);
+    const imageBuffers = files?.map((file) => file.buffer);
 
     if (!imageBuffers || imageBuffers.length === 0) {
       return res.status(404).json({ message: "Please provide profile images" });
     }
 
     const photoUrls = await Promise.all(
-      imageBuffers.map(async buffer => await uploadToS3(requestBody.email, buffer))
+      imageBuffers.map(
+        async (buffer) => await uploadToS3(requestBody.email, buffer)
+      )
     );
-
 
     const personalDetailsRequest = req.body.personal_details;
 
     const personalDetails = {
       fullname: personalDetailsRequest.fullname,
       gender: personalDetailsRequest.gender,
-      photo:photoUrls ,
+      photo: photoUrls,
       birth_date: personalDetailsRequest.birth_date,
       birth_time: personalDetailsRequest.birth_time,
       birth_place: personalDetailsRequest.birth_place,
@@ -57,6 +56,7 @@ let addUser = async (req: Request, res: Response) => {
       weight: personalDetailsRequest.weight,
       gotra: personalDetailsRequest.gotra,
       kuldevi: personalDetailsRequest.kuldevi,
+      age: personalDetailsRequest.age,
     };
 
     const educationDetailsRequest = req.body?.educational_details;
@@ -71,7 +71,7 @@ let addUser = async (req: Request, res: Response) => {
     const professionalDetailsRequest = req.body.professional_details;
 
     const professionalDetails = {
-      professiona: professionalDetailsRequest?.professiona,
+      profession: professionalDetailsRequest?.profession,
       job_title: professionalDetailsRequest?.job_title,
       company_name: professionalDetailsRequest?.company_name,
       job_address: professionalDetailsRequest?.job_address,
@@ -84,8 +84,6 @@ let addUser = async (req: Request, res: Response) => {
 
     const contactDetails = {
       mobile: contactDetailsRequest?.mobile,
-      phone: contactDetailsRequest?.phone,
-      email: contactDetailsRequest?.email,
       current_address: contactDetailsRequest?.current_address,
       partner_expectations: contactDetailsRequest?.partner_expectations,
     };
@@ -107,8 +105,8 @@ let addUser = async (req: Request, res: Response) => {
     const brotherDetails = {
       brother_unmarried: brotherDetailsRequest?.brother_unmarried,
       brother_married: brotherDetailsRequest?.brother_married,
-      father_in_lows_name: brotherDetailsRequest?.father_in_lows_name,
-      father_in_lows_phone: brotherDetailsRequest?.father_in_lows_phone,
+      father_in_lows_name_phone:
+        brotherDetailsRequest?.father_in_lows_name_phone,
     };
 
     const sisterDetailsRequest = req.body.sisters_details;
@@ -116,8 +114,8 @@ let addUser = async (req: Request, res: Response) => {
     const sisterDetails = {
       sisters_unmarried: sisterDetailsRequest?.sisters_unmarried,
       sisters_married: sisterDetailsRequest?.sisters_married,
-      brothers_in_lows_name: sisterDetailsRequest?.brothers_in_lows_name,
-      brothers_in_lows_phone: sisterDetailsRequest?.brothers_in_lows_phone,
+      brothers_in_lows_name_phone:
+        sisterDetailsRequest?.brothers_in_lows_name_phone,
     };
 
     const fatherFamilyDetailsRequest = req.body.fathers_family_details;
@@ -125,12 +123,8 @@ let addUser = async (req: Request, res: Response) => {
     const fatherFamilyDetails = {
       grandfather_name: fatherFamilyDetailsRequest?.grandfather_name,
       grandfather_village: fatherFamilyDetailsRequest?.grandfather_village,
-      kaka_name: fatherFamilyDetailsRequest?.kaka_name,
-      kaka_village: fatherFamilyDetailsRequest?.kaka_village,
-      kaka_phone: fatherFamilyDetailsRequest?.kaka_phone,
-      fuva_name: fatherFamilyDetailsRequest?.fuva_name,
-      fuva_village: fatherFamilyDetailsRequest?.fuva_village,
-      fuva_phone: fatherFamilyDetailsRequest?.fuva_phone,
+      kaka: fatherFamilyDetailsRequest?.kaka,
+      fuva: fatherFamilyDetailsRequest?.fuva,
     };
 
     const motherFamilyDetailsRequest = req.body.mothers_family_details;
@@ -138,12 +132,8 @@ let addUser = async (req: Request, res: Response) => {
     const motherFamilyDetails = {
       grandfather_name: motherFamilyDetailsRequest?.grandfather_name,
       grandfather_village: motherFamilyDetailsRequest?.grandfather_village,
-      kaka_name: motherFamilyDetailsRequest?.kaka_name,
-      kaka_village: motherFamilyDetailsRequest?.kaka_village,
-      kaka_phone: motherFamilyDetailsRequest?.kaka_phone,
-      fuva_name: motherFamilyDetailsRequest?.fuva_name,
-      fuva_village: motherFamilyDetailsRequest?.fuva_village,
-      fuva_phone: motherFamilyDetailsRequest?.fuva_phone,
+      mama: motherFamilyDetailsRequest?.mama,
+      mavsa: motherFamilyDetailsRequest?.mavsa,
     };
     let user = new User({
       phone: requestBody.phone,
