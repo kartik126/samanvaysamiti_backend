@@ -144,7 +144,7 @@ let userSchema = new Schema({
     brother_married: {
       type: String,
     },
-    father_in_lows_name_phone: [
+    father_in_law_name_phone: [
       {
         type: String,
       },
@@ -157,7 +157,7 @@ let userSchema = new Schema({
     sisters_married: {
       type: String,
     },
-    brothers_in_lows_name_phone: [
+    brothers_in_law_name_phone: [
       {
         type: String,
       },

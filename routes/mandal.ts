@@ -16,6 +16,7 @@ const mandalSchema = z.object({
   email: z.string().email(),
   mandal_name: z.string(),
   member_name: z.string(),
+  designation: z.string(),
 });
 
 router.post(
@@ -50,6 +51,7 @@ router.post(
         email: requestBody.email,
         mandal_name: requestBody.mandal_name,
         member_name: requestBody.member_name,
+        designation:requestBody.designation,
         photo: imageUrl,
       });
 

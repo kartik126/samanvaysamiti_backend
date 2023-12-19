@@ -105,8 +105,8 @@ let addUser = async (req: Request, res: Response) => {
     const brotherDetails = {
       brother_unmarried: brotherDetailsRequest?.brother_unmarried,
       brother_married: brotherDetailsRequest?.brother_married,
-      father_in_lows_name_phone:
-        brotherDetailsRequest?.father_in_lows_name_phone,
+      father_in_law_name_phone:
+        brotherDetailsRequest?.father_in_law_name_phone,
     };
 
     const sisterDetailsRequest = req.body.sisters_details;
@@ -114,8 +114,8 @@ let addUser = async (req: Request, res: Response) => {
     const sisterDetails = {
       sisters_unmarried: sisterDetailsRequest?.sisters_unmarried,
       sisters_married: sisterDetailsRequest?.sisters_married,
-      brothers_in_lows_name_phone:
-        sisterDetailsRequest?.brothers_in_lows_name_phone,
+      brothers_in_law_name_phone:
+        sisterDetailsRequest?.brothers_in_law_name_phone,
     };
 
     const fatherFamilyDetailsRequest = req.body.fathers_family_details;
