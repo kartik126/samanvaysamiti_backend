@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 
+import cors from 'cors';
 var createError = require("http-errors");
 var express = require("express");
 var path = require("path");
@@ -14,6 +15,7 @@ var dbConnect = require("./utils/dbConnect");
 require('dotenv').config()
 
 var app = express();
+app.use(cors());
 
 // view engine setup
 // app.set("views", path.join(__dirname, "views"));
