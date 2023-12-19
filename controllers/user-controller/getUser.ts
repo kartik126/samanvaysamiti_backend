@@ -4,10 +4,11 @@ import User from "../../models/user";
 
 let getUser = async (req: Request, res: Response) => {
   try {
-    // Use the user's ID obtained from the token
-    const userId = req.params.id;
-    // Fetch the user's profile based on the user ID
-    const user = await User.findById(userId);
+    // Use the serial_no obtained from the request parameters
+    const serialNo = req.params.serialNo;
+    
+    // Fetch the user's profile based on the serial_no
+    const user = await User.findOne({ serial_no: serialNo });
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
