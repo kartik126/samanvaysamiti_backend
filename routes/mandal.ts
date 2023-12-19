@@ -66,4 +66,26 @@ router.post(
   }
 );
 
+router.get("/", async (req: Request, res: Response) => {
+  try {
+    let mandal = await Mandal.find({});
+
+    if (!mandal) {
+      return res.status(200).send({
+        success: false,
+        message: "Not found",
+        user: mandal,
+      });
+    }
+
+    return res.status(200).send({
+      success: true,
+      mandal: mandal,
+    });
+  } catch (error) {
+    res.status(500).send(error);
+    console.log({ error: error });
+  }
+});
+
 module.exports = router;
