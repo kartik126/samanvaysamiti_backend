@@ -101,6 +101,16 @@ let userSchema = new Schema({
     },
   },
   contact_details: {
+    phone_number: {
+      type: String,
+      maxlength: 10,
+    },
+    email: {
+      type: String,
+    },
+    consanguineous_marriage:{
+      type: String,
+    },
     mobile: {
       type: String,
       maxlength: 10,
