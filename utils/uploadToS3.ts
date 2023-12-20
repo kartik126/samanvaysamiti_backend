@@ -4,7 +4,7 @@ export const uploadToS3 = async (email: string, imageBuffer: Buffer) => {
   try {
     const s3UploadParams = {
       Bucket: "samanvaysamiti-uploads",
-      Key: `profile-images/${email}.jpg`,
+      Key: `profile-images/${email}-image.jpg`,
       Body: imageBuffer,
       ContentType: "image/jpeg",
       ACL: "public-read",
