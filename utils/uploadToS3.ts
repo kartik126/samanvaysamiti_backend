@@ -4,13 +4,13 @@ export const uploadToS3 = async (email: string, imageBuffer: Buffer) => {
   try {
     const s3UploadParams = {
       Bucket: "samanvaysamiti-uploads",
-      Key: `profile-images/${email}-${Date.now()}.jpg`,
+      Key: `profile-images/${email}.jpg`,
       Body: imageBuffer,
       ContentType: "image/jpeg",
       ACL: "public-read",
-      PartSize: 10 * 1024 * 1024, // 10 MB part size (adjust as needed)
+      PartSize: 10 * 1024 * 1024,
       httpOptions: {
-        timeout: 600000, // 10 minutes timeout (adjust as needed)
+        timeout: 600000,
       },
     };
 
