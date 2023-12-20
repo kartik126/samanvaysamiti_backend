@@ -26,8 +26,6 @@ let userSchema = new Schema({
   personal_details: {
     fullname: {
       type: String,
-      minlength: 3,
-      maxlength: 20,
     },
     gender: {
       type: String,
