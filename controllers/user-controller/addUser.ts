@@ -49,6 +49,7 @@ let addUser = async (req: Request, res: Response) => {
       gender: personalDetailsRequest.gender,
       photo: photoUrls,
       birth_date: personalDetailsRequest.birth_date,
+      birth_name: personalDetailsRequest.birth_name,
       birth_time: personalDetailsRequest.birth_time,
       birth_place: personalDetailsRequest.birth_place,
       height: personalDetailsRequest.height,
@@ -85,7 +86,7 @@ let addUser = async (req: Request, res: Response) => {
     const contactDetails = {
       phone: contactDetailsRequest?.phone_number,
       email: contactDetailsRequest?.email,
-      consanguineous_marriage: contactDetailsRequest?.consanguineous_marriage,      
+      consanguineous_marriage: contactDetailsRequest?.consanguineous_marriage,
       mobile: contactDetailsRequest?.mobile,
       current_address: contactDetailsRequest?.current_address,
       partner_expectations: contactDetailsRequest?.partner_expectations,
@@ -108,8 +109,7 @@ let addUser = async (req: Request, res: Response) => {
     const brotherDetails = {
       brother_unmarried: brotherDetailsRequest?.brother_unmarried,
       brother_married: brotherDetailsRequest?.brother_married,
-      father_in_law_name_phone:
-        brotherDetailsRequest?.father_in_law_name_phone,
+      father_in_law_name_phone: brotherDetailsRequest?.father_in_law_name_phone,
     };
 
     const sisterDetailsRequest = req.body.sisters_details;

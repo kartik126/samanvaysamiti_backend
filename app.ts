@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 
-import cors from 'cors';
+import cors from "cors";
 var createError = require("http-errors");
 var express = require("express");
 var path = require("path");
@@ -13,7 +13,7 @@ var mandalRouter = require("./routes/mandal");
 var contactRouter = require("./routes/contact");
 
 var dbConnect = require("./utils/dbConnect");
-require('dotenv').config()
+require("dotenv").config();
 
 var app = express();
 app.use(cors());
@@ -31,8 +31,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/", indexRouter);
 app.use("/api/users/", usersRouter);
 app.use("/api/mandal/", mandalRouter);
-app.use("/api/contact/",contactRouter);
-
+app.use("/api/contact/", contactRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req: Request, res: Response, next: NextFunction) {

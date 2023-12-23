@@ -36,6 +36,9 @@ let userSchema = new Schema({
     birth_date: {
       type: String,
     },
+    birth_name: {
+      type: String,
+    },
     birth_time: {
       type: String,
     },
@@ -106,7 +109,7 @@ let userSchema = new Schema({
     email: {
       type: String,
     },
-    consanguineous_marriage:{
+    consanguineous_marriage: {
       type: String,
     },
     mobile: {
@@ -247,7 +250,7 @@ userSchema.methods.resetDownloadedProfilesCount = async function () {
 let User = mongoose.model("User", userSchema);
 
 // Schedule a cron job to run every day at midnight
-cron.schedule('0 0 * * *', async () => {
+cron.schedule("0 0 * * *", async () => {
   try {
     // Find users whose last reset timestamp is more than 24 hours ago
     const usersToUpdate = await User.find({
@@ -262,9 +265,9 @@ cron.schedule('0 0 * * *', async () => {
 
     await Promise.all(updates);
 
-    console.log('Downloaded profiles count reset for users:', usersToUpdate);
+    console.log("Downloaded profiles count reset for users:", usersToUpdate);
   } catch (error) {
-    console.error('Error resetting downloaded profiles count:', error);
+    console.error("Error resetting downloaded profiles count:", error);
   }
 });
 
