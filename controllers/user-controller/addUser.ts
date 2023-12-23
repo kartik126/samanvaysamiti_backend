@@ -9,6 +9,7 @@ interface FileArray extends Array<Express.Multer.File> {}
 const userSchema = z.object({
   phone: z.string(),
   email: z.string().email(),
+  featured: z.boolean(),
 });
 
 let addUser = async (req: Request, res: Response) => {
@@ -142,6 +143,7 @@ let addUser = async (req: Request, res: Response) => {
     let user = new User({
       phone: requestBody.phone,
       email: requestBody.email,
+      featured: requestBody.featured,
       personal_details: personalDetails,
       educational_details: educationDetails,
       professional_details: professionalDetails,
