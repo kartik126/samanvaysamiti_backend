@@ -9,7 +9,9 @@ interface FileArray extends Array<Express.Multer.File> {}
 const userSchema = z.object({
   phone: z.string(),
   email: z.string().email(),
-  featured: z.boolean(),
+  featured: z
+    .boolean()
+    .transform((value) => String(value).toLowerCase() === "true"),
 });
 
 let addUser = async (req: Request, res: Response) => {
