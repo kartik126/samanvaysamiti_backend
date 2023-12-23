@@ -75,6 +75,7 @@ let addUser = async (req: Request, res: Response) => {
       profession: professionalDetailsRequest?.profession,
       job_title: professionalDetailsRequest?.job_title,
       company_name: professionalDetailsRequest?.company_name,
+      work_city: professionalDetailsRequest?.work_city,
       job_address: professionalDetailsRequest?.job_address,
       weekly_holiday: professionalDetailsRequest?.weekly_holiday,
       monthly_income: professionalDetailsRequest?.monthly_income,

@@ -91,6 +91,9 @@ let userSchema = new Schema({
     job_address: {
       type: String,
     },
+    work_city: {
+      type: String,
+    },
     weekly_holiday: {
       type: String,
     },
