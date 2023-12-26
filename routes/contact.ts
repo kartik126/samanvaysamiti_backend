@@ -7,9 +7,11 @@ const sendMail = (
   data: any,
   callback: (error: Error | null, info: any) => void
 ) => {
+  // Add the user's email as a CC recipient
   const mailOptions = {
-    from: data.email,
-    to: "amandeepp26@gmail.com",
+    from: "info@samanvaysamiti.com",
+    to: "contact@samanvaysamiti.com",
+    cc: data.email, // CC the user's email
     subject: data.subject,
     text: `Name: ${data.name}\nEmail: ${data.email}\nMessage: ${data.message}`,
   };
