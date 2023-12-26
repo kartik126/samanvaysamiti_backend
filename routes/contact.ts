@@ -3,10 +3,13 @@ import { transporter } from "../utils/nodemailer";
 var express = require("express");
 var router = express.Router();
 
-const sendMail = (data: any, callback: (error: Error | null, info: any) => void) => {
+const sendMail = (
+  data: any,
+  callback: (error: Error | null, info: any) => void
+) => {
   const mailOptions = {
     from: data.email,
-    to: "lavi9921@gmail.com",
+    to: "amandeepp26@gmail.com",
     subject: data.subject,
     text: `Name: ${data.name}\nEmail: ${data.email}\nMessage: ${data.message}`,
   };
@@ -19,7 +22,7 @@ const sendMail = (data: any, callback: (error: Error | null, info: any) => void)
 router.post("/", async (req: Request, res: Response) => {
   try {
     const formData = req.body;
-    
+
     // Call sendMail with a callback function
     sendMail(formData, (error, info) => {
       if (error) {

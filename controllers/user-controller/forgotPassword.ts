@@ -13,9 +13,10 @@ const forgotPassword = async (req: Request, res: Response) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res
-        .status(404)
-        .json({ message: "User not found with this email address" });
+      return res.status(404).json({
+        message: "User not found with this email address",
+        status: false,
+      });
     }
 
     // Generate a unique token for password reset
@@ -28,10 +29,10 @@ const forgotPassword = async (req: Request, res: Response) => {
 
     // Create the email content
     const mailOptions = {
-      from: "lavi9921@gmail.com",
+      from: "amandeepp26@gmail.com",
       to: user.email,
       subject: "Password Reset",
-      text: `Click the following link to reset your password: http://your-app/reset-password/${resetToken}`,
+      text: `Click the following link to reset your password: https://www.samanvaysamiti.com/reset-password/${resetToken}`,
     };
 
     // Send the email
@@ -39,7 +40,10 @@ const forgotPassword = async (req: Request, res: Response) => {
 
     res
       .status(200)
-      .json({ message: "Password reset link sent to your email address" });
+      .json({
+        message: "Password reset link has been sent to your email address",
+        status: true,
+      });
   } catch (error) {
     console.error("Forgot password error:", error);
     res.status(500).json({ message: "Internal server error" });
