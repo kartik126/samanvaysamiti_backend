@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import User from "../../models/user";
 import { z } from "zod";
 import { uploadToS3 } from "../../utils/uploadToS3";
+import { hashPasswordSecurely } from "../../utils/hashPasswordSecurely";
 
 interface FileArray extends Array<Express.Multer.File> {}
 
@@ -9,6 +10,7 @@ interface FileArray extends Array<Express.Multer.File> {}
 const userSchema = z.object({
   phone: z.string(),
   email: z.string().email(),
+  password: z.string(),
   featured: z.string().transform((str) => str.toLowerCase() === "true"),
 });
 
@@ -26,6 +28,8 @@ let addUser = async (req: Request, res: Response) => {
     if (existingUser) {
       return res.status(400).json({ message: "Email or phone already exists" });
     }
+
+    const hashedPassword = await hashPasswordSecurely(requestBody.password);
 
     // Explicit type assertion for req.files
     const files = req.files as FileArray;
@@ -143,6 +147,7 @@ let addUser = async (req: Request, res: Response) => {
     let user = new User({
       phone: requestBody.phone,
       email: requestBody.email,
+      password: hashedPassword,
       featured: requestBody.featured,
       personal_details: personalDetails,
       educational_details: educationDetails,
@@ -153,6 +158,7 @@ let addUser = async (req: Request, res: Response) => {
       sisters_details: sisterDetails,
       fathers_family_details: fatherFamilyDetails,
       mothers_family_details: motherFamilyDetails,
+      user_status: "active",
     });
 
     await user.save();

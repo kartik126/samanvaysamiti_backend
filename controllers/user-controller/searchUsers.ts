@@ -24,7 +24,6 @@ const requestBodySchema = z.object({
 
 let searchUsers = async (req: Request, res: Response) => {
   try {
-
     const requestBody = req.body || {};
     const {
       gender,
@@ -229,7 +228,7 @@ let searchUsers = async (req: Request, res: Response) => {
       };
       pipeline.push(professionMatch);
     }
-    
+
     if (gotra !== undefined) {
       const gotraMatch = {
         $match: {
@@ -262,6 +261,13 @@ let searchUsers = async (req: Request, res: Response) => {
       };
       pipeline.push(currencyMatch);
     }
+
+    const statusMatch = {
+      $match: {
+        user_status: "active",
+      },
+    };
+    pipeline.push(statusMatch);
 
     const result = await User.aggregate(pipeline);
 

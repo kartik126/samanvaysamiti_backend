@@ -13,6 +13,9 @@ let userSchema = new Schema({
   email: {
     type: String,
   },
+  password: {
+    type: String,
+  },
   otp: {
     type: String,
   },
@@ -217,6 +220,15 @@ let userSchema = new Schema({
     type: Boolean,
     default: false,
   },
+  user_status: {
+    type: String,
+  },
+  resetPasswordToken:{
+    type: String
+  },
+  resetPasswordExpires:{
+    type: Number
+  }
 });
 
 userSchema.pre("save", async function (next) {

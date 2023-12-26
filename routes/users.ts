@@ -10,6 +10,8 @@ import searchUsers from "../controllers/user-controller/searchUsers";
 import downloadProfile from "../controllers/user-controller/downloadProfile";
 import callCount from "../controllers/user-controller/userCallCount";
 import whatsappCount from "../controllers/user-controller/userWhatsappCount";
+import forgotPassword from "../controllers/user-controller/forgotPassword";
+import resetPassword from "../controllers/user-controller/resetPassword";
 
 var express = require("express");
 var router = express.Router();
@@ -17,10 +19,10 @@ var router = express.Router();
 const multer = require("multer");
 
 const storage = multer.memoryStorage(); // Store the image in memory
-const upload = multer({ storage: storage , limits:{files:5}});
+const upload = multer({ storage: storage, limits: { files: 5 } });
 
 router.post("/send-otp", sendOTP);
-router.post("/register", upload.array('photo',5),addUser);
+router.post("/register", upload.array("photo", 5), addUser);
 router.post("/verify-otp", verifyOTP);
 router.post("/signup-verify-otp", signupVerifyOTP);
 
@@ -31,5 +33,8 @@ router.post("/search-users", searchUsers);
 router.post("/download-profile", verifyToken, downloadProfile);
 router.post("/call-profile", verifyToken, callCount);
 router.post("/whatsapp-profile", verifyToken, whatsappCount);
+
+router.post("/forgot-password", forgotPassword);
+router.post("/reset-password", resetPassword);
 
 module.exports = router;

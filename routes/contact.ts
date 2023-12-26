@@ -1,15 +1,7 @@
 import { Request, Response } from "express";
+import { transporter } from "../utils/nodemailer";
 var express = require("express");
 var router = express.Router();
-const nodemailer = require("nodemailer");
-
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: "lavi9921@gmail.com",
-    pass: "daig ekpf tblh hbxv",
-  },
-});
 
 const sendMail = (data: any, callback: (error: Error | null, info: any) => void) => {
   const mailOptions = {
