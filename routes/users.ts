@@ -12,6 +12,7 @@ import callCount from "../controllers/user-controller/userCallCount";
 import whatsappCount from "../controllers/user-controller/userWhatsappCount";
 import forgotPassword from "../controllers/user-controller/forgotPassword";
 import resetPassword from "../controllers/user-controller/resetPassword";
+import loginUser from "../controllers/user-controller/login";
 
 var express = require("express");
 var router = express.Router();
@@ -37,4 +38,5 @@ router.post("/whatsapp-profile", verifyToken, whatsappCount);
 router.post("/forgot-password", forgotPassword);
 router.post("/reset-password", resetPassword);
 
+router.post("/login", loginUser);
 module.exports = router;
