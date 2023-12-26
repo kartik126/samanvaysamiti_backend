@@ -31,7 +31,7 @@ const forgotPassword = async (req: Request, res: Response) => {
       from: "lavi9921@gmail.com",
       to: user.email,
       subject: "Password Reset",
-      text: `Click the following link to reset your password: http://your-app/reset-password/${resetToken}`,
+      text: `Click the following link to reset your password: https://www.samanvaysamiti.com/reset-password/${resetToken}`,
     };
 
     // Send the email
