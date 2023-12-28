@@ -1,5 +1,4 @@
-import mongoose, { Schema, SchemaTypes } from "mongoose";
-import cron from "node-cron";
+import mongoose, { Error, Schema, SchemaTypes } from "mongoose";
 
 let userSchema = new Schema({
   serial_no: {
@@ -23,7 +22,6 @@ let userSchema = new Schema({
     type: String,
   },
   downloaded_profiles_count: { type: Number, default: 0 },
-  lastResetTimestamp: { type: Date, default: Date.now },
   call_profiles_count: { type: Number, default: 0 },
   whatsapp_profiles_count: { type: Number, default: 0 },
   personal_details: {
@@ -223,67 +221,48 @@ let userSchema = new Schema({
   user_status: {
     type: String,
   },
-  resetPasswordToken:{
-    type: String
+  resetPasswordToken: {
+    type: String,
   },
-  resetPasswordExpires:{
-    type: Number
-  }
+  resetPasswordExpires: {
+    type: Number,
+  },
 });
 
 userSchema.pre("save", async function (next) {
-  const currentDate = new Date();
-  const currentYear = currentDate.getFullYear().toString().slice(-2);
+  try {
+    // Check if the serial_no is already set (e.g., during the cron job)
+    if (this.serial_no) {
+      return next();
+    }
 
-  // Find the highest existing serial_no for the current year
-  const highestSerialNo = await mongoose
-    .model("User")
-    .find({ serial_no: { $regex: `^${currentYear}` } })
-    .sort({ serial_no: -1 })
-    .limit(1);
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear().toString().slice(-2);
 
-  let nextSerialNo;
-  if (highestSerialNo && highestSerialNo.length > 0) {
-    const lastSerialNo = parseInt(highestSerialNo[0].serial_no.slice(-4));
-    nextSerialNo = `${currentYear}${("0000" + (lastSerialNo + 1)).slice(-4)}`;
-  } else {
-    // If no existing serial_no for the current year, start with 0001
-    nextSerialNo = `${currentYear}0001`;
+    // Find the highest existing serial_no for the current year
+    const highestSerialNo = await mongoose
+      .model("User")
+      .findOne({ serial_no: { $regex: `^${currentYear}` } })
+      .sort({ serial_no: -1 });
+
+    let nextSerialNo;
+    if (highestSerialNo) {
+      const lastSerialNo = parseInt(highestSerialNo.serial_no.slice(-4));
+      nextSerialNo = `${currentYear}${("0000" + (lastSerialNo + 1)).slice(-4)}`;
+    } else {
+      // If no existing serial_no for the current year, start with 0001
+      nextSerialNo = `${currentYear}0001`;
+    }
+
+    this.serial_no = nextSerialNo;
+    next();
+  } catch (error: any) {
+    // Handle any errors, log, and pass it to the next middleware
+    console.error("Error generating serial number:", error);
+    next(error);
   }
-
-  this.serial_no = nextSerialNo;
-  next();
 });
-
-// Function to reset downloaded_profiles_count
-userSchema.methods.resetDownloadedProfilesCount = async function () {
-  this.downloaded_profiles_count = 0;
-  this.lastResetTimestamp = new Date();
-  await this.save();
-};
 
 let User = mongoose.model("User", userSchema);
-
-// Schedule a cron job to run every day at midnight
-cron.schedule("0 0 * * *", async () => {
-  try {
-    // Find users whose last reset timestamp is more than 24 hours ago
-    const usersToUpdate = await User.find({
-      lastResetTimestamp: { $lt: new Date(Date.now() - 24 * 60 * 60 * 1000) },
-    });
-
-    // Update the downloaded_profiles_count and lastResetTimestamp for each user
-    const updates = usersToUpdate.map(async (user) => {
-      // @ts-ignore
-      await user.resetDownloadedProfilesCount();
-    });
-
-    await Promise.all(updates);
-
-    console.log("Downloaded profiles count reset for users:", usersToUpdate);
-  } catch (error) {
-    console.error("Error resetting downloaded profiles count:", error);
-  }
-});
 
 export default User;
