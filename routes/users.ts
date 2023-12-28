@@ -13,6 +13,8 @@ import whatsappCount from "../controllers/user-controller/userWhatsappCount";
 import forgotPassword from "../controllers/user-controller/forgotPassword";
 import resetPassword from "../controllers/user-controller/resetPassword";
 import loginUser from "../controllers/user-controller/login";
+import emailCount from "../controllers/user-controller/userEmailCount";
+import telephoneCount from "../controllers/user-controller/telephoneCount";
 
 var express = require("express");
 var router = express.Router();
@@ -34,6 +36,8 @@ router.post("/search-users", searchUsers);
 router.post("/download-profile", verifyToken, downloadProfile);
 router.post("/call-profile", verifyToken, callCount);
 router.post("/whatsapp-profile", verifyToken, whatsappCount);
+router.post("/email-profile", verifyToken, emailCount);
+router.post("/telephone-profile", verifyToken, telephoneCount);
 
 router.post("/forgot-password", forgotPassword);
 router.post("/reset-password", resetPassword);

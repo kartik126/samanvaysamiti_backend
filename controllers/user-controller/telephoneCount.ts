@@ -3,10 +3,10 @@ import { Request, Response } from "express";
 import User from "../../models/user";
 import DailyStats from "../../models/DailyStats";
 
-// Controller to update WhatsApp count and track WhatsApp users
-const whatsappCount = async (req: Request, res: Response) => {
+// Controller to update telephone count and track users who make telephone calls
+const telephoneCount = async (req: Request, res: Response) => {
   const userId = req.body.user._id;
-  const whatsappUserId = req.body.whatsappUserId;
+  const telephoneUserId = req.body.telephoneUserId; // Assuming you pass the telephone user's ID in the request
 
   try {
     // Check if there is a dailyStats document for today and the user
@@ -21,26 +21,26 @@ const whatsappCount = async (req: Request, res: Response) => {
       });
     }
 
-    // Check if the user has reached the WhatsApp limit for the day
-    if (dailyStats.whatsappUsers.length < 10) {
-      // Fetch information about the WhatsApp user
-      const whatsappUser = await User.findById(whatsappUserId);
+    // Check if the user has reached the telephone call limit for the day
+    if (dailyStats.telephoneUsers.length < 10) {
+      // Fetch information about the telephone user
+      const telephoneUser = await User.findById(telephoneUserId);
 
-      if (whatsappUser) {
-        // Track WhatsApp users (if not already tracked)
-        const whatsappUserInfo = {
-          userId: whatsappUserId,
+      if (telephoneUser) {
+        // Track users who make telephone calls (if not already tracked)
+        const telephoneUserInfo = {
+          userId: telephoneUserId,
           timestamp: new Date(),
         };
 
         if (
-          !dailyStats.whatsappUsers.some(
-            (user) => user.userId && user.userId.toString() === whatsappUserId
+          !dailyStats.telephoneUsers.some(
+            (user) => user.userId && user.userId.toString() === telephoneUserId
           )
         ) {
-          dailyStats.whatsappUsers.push(whatsappUserInfo);
+          dailyStats.telephoneUsers.push(telephoneUserInfo);
           // Update the dailyStats document
-          dailyStats.whatsappCount += 1;
+          dailyStats.telephoneCount += 1;
         }
 
         // Save the dailyStats document
@@ -48,12 +48,12 @@ const whatsappCount = async (req: Request, res: Response) => {
 
         res.json({ success: true });
       } else {
-        res.json({ success: false, message: "WhatsApp user not found" });
+        res.json({ success: false, message: "Telephone user not found" });
       }
     } else {
       res.json({
           success: false,
-          message: "WhatsApp limit exceeded for the day",
+          message: "Telephone call limit exceeded for the day",
         });
     }
   } catch (error) {
@@ -63,4 +63,4 @@ const whatsappCount = async (req: Request, res: Response) => {
 };
 
 // Export the controller
-export default whatsappCount;
+export default telephoneCount;

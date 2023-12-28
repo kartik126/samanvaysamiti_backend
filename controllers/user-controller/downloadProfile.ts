@@ -1,33 +1,64 @@
 // Import necessary modules
-import { Request, Response } from 'express';
-import User from '../../models/user';
+import { Request, Response } from "express";
+import User from "../../models/user";
+import DailyStats from "../../models/DailyStats";
 
-// Controller to update downloaded profiles count and track downloaded profiles
+// Controller to update download profile count and track users who download profiles
 const downloadProfile = async (req: Request, res: Response) => {
   const userId = req.body.user._id;
   const downloadedUserId = req.body.downloadedUserId; // Assuming you pass the downloaded user's ID in the request
 
   try {
-    // Find the user by ID
-    const user = await User.findById(userId);
+    // Check if there is a dailyStats document for today and the user
+    const today = new Date().setHours(0, 0, 0, 0);
+    let dailyStats = await DailyStats.findOne({ userId, date: today });
 
-    // Update downloaded_profiles_count
-    // @ts-ignore
-    user?.downloaded_profiles_count += 1;
-
-    // Track downloaded profile (add downloadedUserId to the downloadedProfiles array)
-    if (downloadedUserId && !user?.downloadedProfiles.includes(downloadedUserId)) {
-      user?.downloadedProfiles.push(downloadedUserId);
+    if (!dailyStats) {
+      // If no dailyStats document exists, create a new one
+      dailyStats = new DailyStats({
+        userId,
+        date: today,
+      });
     }
 
-    // Save the updated user document
-    await user?.save();
+    // Check if the user has reached the download profile limit for the day
+    if (dailyStats.downloadedProfiles.length < 10) {
+      // Fetch information about the downloaded user
+      const downloadedUser = await User.findById(downloadedUserId);
 
-    // Return a response or do other necessary actions
-    res.json({ success: true, message: 'Profile downloaded successfully.' });
+      if (downloadedUser) {
+        // Track users who download profiles (if not already tracked)
+        const downloadedUserInfo = {
+          userId: downloadedUserId,
+          timestamp: new Date(),
+        };
+
+        if (
+          !dailyStats.downloadedProfiles.some(
+            (user) => user.userId && user.userId.toString() === downloadedUserId
+          )
+        ) {
+          dailyStats.downloadedProfiles.push(downloadedUserInfo);
+          // Update the dailyStats document
+          dailyStats.profileDownloadCount += 1;
+        }
+
+        // Save the dailyStats document
+        await dailyStats.save();
+
+        res.json({ success: true });
+      } else {
+        res.json({ success: false, message: "Downloaded user not found" });
+      }
+    } else {
+      res.json({
+          success: false,
+          message: "Download profile limit exceeded for the day",
+        });
+    }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ success: false, message: 'Internal Server Error' });
+    res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };
 
