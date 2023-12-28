@@ -22,7 +22,7 @@ const callCount = async (req: Request, res: Response) => {
     }
 
     // Check if the user has reached the call limit for the day
-    if (dailyStats.calledUsers.length < 10) {
+    if (dailyStats.callCount < 10) {
       // Fetch information about the user being called
       const calledUser = await User.findById(calledUserId);
 

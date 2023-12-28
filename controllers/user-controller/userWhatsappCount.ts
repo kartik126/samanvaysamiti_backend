@@ -22,7 +22,7 @@ const whatsappCount = async (req: Request, res: Response) => {
     }
 
     // Check if the user has reached the WhatsApp limit for the day
-    if (dailyStats.whatsappUsers.length < 10) {
+    if (dailyStats.whatsappCount < 10) {
       // Fetch information about the WhatsApp user
       const whatsappUser = await User.findById(whatsappUserId);
 

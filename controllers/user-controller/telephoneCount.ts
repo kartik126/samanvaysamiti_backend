@@ -22,7 +22,7 @@ const telephoneCount = async (req: Request, res: Response) => {
     }
 
     // Check if the user has reached the telephone call limit for the day
-    if (dailyStats.telephoneUsers.length < 10) {
+    if (dailyStats.telephoneCount < 10) {
       // Fetch information about the telephone user
       const telephoneUser = await User.findById(telephoneUserId);
 
