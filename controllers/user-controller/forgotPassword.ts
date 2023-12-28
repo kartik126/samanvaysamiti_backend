@@ -31,8 +31,13 @@ const forgotPassword = async (req: Request, res: Response) => {
     const mailOptions = {
       from: "info@samanvaysamiti.com",
       to: user.email,
-      subject: "Password Reset",
-      text: `Click the following link to reset your password: https://www.samanvaysamiti.com/reset-password/${resetToken}`,
+      subject: "samanvaysamiti.com लॉगिन तपशील",
+      text: `प्रिय सभासद,
+              साईट वर लॉगिन करण्यासाठी कृपया खाली दिलेल्या लिंक वर जाऊन नवीन पासवर्ड जनरेट करून साईट वर लॉगिन करावे .
+
+              https://www.samanvaysamiti.com/reset-password/${resetToken}
+
+              धन्यवाद !`,
     };
 
     // Send the email
