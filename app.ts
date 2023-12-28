@@ -33,7 +33,9 @@ app.use("/", indexRouter);
 app.use("/api/users/", usersRouter);
 app.use("/api/mandal/", mandalRouter);
 app.use("/api/contact/", contactRouter);
+
 app.use("/api/google/", googleRouter);
+
 // catch 404 and forward to error handler
 app.use(function (req: Request, res: Response, next: NextFunction) {
   next(createError(404));
