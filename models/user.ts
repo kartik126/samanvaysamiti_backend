@@ -7,7 +7,6 @@ let userSchema = new Schema({
   },
   phone: {
     type: String,
-    maxlength: 10,
   },
   email: {
     type: String,
