@@ -10,7 +10,6 @@ const resetPassword = async (req: Request, res: Response) => {
     // Find the user with the provided reset token
     const user = await User.findOne({
       resetPasswordToken: resetToken,
-      resetPasswordExpires: { $gt: Date.now() },
     });
 
     if (!user) {
