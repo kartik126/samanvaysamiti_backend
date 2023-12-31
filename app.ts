@@ -12,6 +12,8 @@ var usersRouter = require("./routes/users");
 var mandalRouter = require("./routes/mandal");
 var contactRouter = require("./routes/contact");
 var googleRouter = require("./routes/google");
+var guestRouter = require("./routes/guest");
+
 
 var dbConnect = require("./utils/dbConnect");
 require("dotenv").config();
@@ -35,6 +37,8 @@ app.use("/api/mandal/", mandalRouter);
 app.use("/api/contact/", contactRouter);
 
 app.use("/api/google/", googleRouter);
+app.use("/api/guest/", guestRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function (req: Request, res: Response, next: NextFunction) {
