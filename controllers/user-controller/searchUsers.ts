@@ -9,8 +9,8 @@ const requestBodySchema = z.object({
   location: z.string().optional(),
   city: z.string().optional(),
   profession: z.string().optional(),
-  gotra: z.string().optional(),
-  education_level_completed: z.string().optional(),
+  gotra: z.array(z.string()).optional(),
+  education_level_completed: z.array(z.string()).optional(),
   minSalary: z.number().optional(),
   maxSalary: z.number().optional(),
   currency: z.string().optional(),
@@ -20,6 +20,7 @@ const requestBodySchema = z.object({
   maxHeight: z.number().optional(),
   minWeight: z.number().optional(),
   maxWeight: z.number().optional(),
+  searchQuery: z.string().optional(),
 });
 
 let searchUsers = async (req: Request, res: Response) => {
@@ -41,10 +42,31 @@ let searchUsers = async (req: Request, res: Response) => {
       maxSalary,
       minSalary,
       location,
+      searchQuery,
     } = requestBodySchema.parse(requestBody);
 
     const pipeline = [];
-
+    
+    if (searchQuery) {
+      const searchMatch = {
+        $match: {
+          $or: [
+            { serial_no: searchQuery },
+            {
+              "personal_details.fullname": {
+                $regex: new RegExp(`${searchQuery}`, "i"),
+              },
+            },
+            {
+              "educational_details.education_detail": {
+                $regex: new RegExp(`${searchQuery}`, "i"),
+              },
+            },
+          ],
+        },
+      };
+      pipeline.push(searchMatch);
+    }
     if (minSalary !== undefined || maxSalary !== undefined) {
       const salaryMatch = {
         $match: {
@@ -159,33 +181,51 @@ let searchUsers = async (req: Request, res: Response) => {
       pipeline.push(heightMatch);
     }
 
+
     if (minAge !== undefined || maxAge !== undefined) {
       const ageMatch = {
         $match: {
-          $and: [
-            {
-              $expr: {
-                $or: [
-                  { $eq: [minAge, undefined] },
-                  { $eq: ["$personal_details.age", ""] },
-                  { $gte: [{ $toDouble: "$personal_details.age" }, minAge] },
-                ],
-              },
-            },
-            {
-              $expr: {
+          $expr: {
+            $and: [
+              {
                 $or: [
                   { $eq: [maxAge, undefined] },
-                  { $eq: ["$personal_details.age", ""] },
-                  { $lte: [{ $toDouble: "$personal_details.age" }, maxAge] },
+                  {
+                    $gte: [
+                      { $toDouble: maxAge },
+                      {
+                        $divide: [
+                          { $subtract: [new Date(), { $dateFromString: { dateString: "$personal_details.birth_date", format: "%d-%m-%Y" } }] },
+                          31536000000, // milliseconds in a year
+                        ],
+                      },
+                    ],
+                  },
                 ],
               },
-            },
-          ],
+              {
+                $or: [
+                  { $eq: [minAge, undefined] },
+                  {
+                    $lte: [
+                      { $toDouble: minAge },
+                      {
+                        $divide: [
+                          { $subtract: [new Date(), { $dateFromString: { dateString: "$personal_details.birth_date", format: "%d-%m-%Y" } }] },
+                          31536000000, // milliseconds in a year
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
         },
       };
       pipeline.push(ageMatch);
     }
+
 
     if (gender !== undefined) {
       const genderMatch = {
@@ -229,27 +269,31 @@ let searchUsers = async (req: Request, res: Response) => {
       pipeline.push(professionMatch);
     }
 
-    if (gotra !== undefined) {
-      const gotraMatch = {
-        $match: {
-          "personal_details.gotra": {
-            $regex: new RegExp(`^${gotra}$`, "i"),
-          },
-        },
-      };
-      pipeline.push(gotraMatch);
-    }
+   if (gotra !== undefined && gotra.length > 0) {
+     const gotraMatch = {
+       $match: {
+         "personal_details.gotra": {
+           $in: gotra.map((g) => new RegExp(`^${g}$`, "i")),
+         },
+       },
+     };
+     pipeline.push(gotraMatch);
+   }
 
-    if (education_level_completed !== undefined) {
-      const educationMatch = {
-        $match: {
-          "educational_details.education_level": {
-            $regex: new RegExp(`^${education_level_completed}$`, "i"),
-          },
-        },
-      };
-      pipeline.push(educationMatch);
-    }
+   if (
+     education_level_completed !== undefined &&
+     education_level_completed.length > 0
+   ) {
+     const educationMatch = {
+       $match: {
+         "educational_details.education_level": {
+           $in: education_level_completed.map((e) => new RegExp(`^${e}$`, "i")),
+         },
+       },
+     };
+     pipeline.push(educationMatch);
+   }
+
 
     if (currency !== undefined) {
       const currencyMatch = {
