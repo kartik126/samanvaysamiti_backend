@@ -22,11 +22,11 @@ router.post("/register", async (req: Request, res: Response) => {
         .json({ message: "Email or phone already registered", status: false });
     }
 
-    if (!isValidEmail(email)) {
-      return res
-        .status(400)
-        .json({ message: "Invalid email format", status: false });
-    }
+    // if (!isValidEmail(email)) {
+    //   return res
+    //     .status(400)
+    //     .json({ message: "Invalid email format", status: false });
+    // }
     if (!isValidPhone(phone)) {
       return res
         .status(400)
