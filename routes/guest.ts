@@ -12,26 +12,42 @@ router.post("/register", async (req: Request, res: Response) => {
   try {
     const { fullname, email, password, phone } = req.body;
 
-    // Check if the email or phone already exists in the Users table
-    const userWithEmailExists = await User.findOne({ email }) || await Guest.findOne({email});
-    const userWithPhoneExists = await User.findOne({ phone }) || await Guest.findOne({phone});
-
-    if (userWithEmailExists || userWithPhoneExists) {
+    // Validate email and phone formats
+    if (email && !isValidEmail(email)) {
       return res
         .status(400)
-        .json({ message: "Email or phone already registered", status: false });
+        .json({ message: "Invalid email format", status: false });
     }
 
-    // if (!isValidEmail(email)) {
-    //   return res
-    //     .status(400)
-    //     .json({ message: "Invalid email format", status: false });
-    // }
-    if (!isValidPhone(phone)) {
+    if (phone && !isValidPhone(phone)) {
       return res
         .status(400)
         .json({ message: "Invalid phone number", status: false });
     }
+
+    // Check if the email or phone already exists in the Users table
+    if (email) {
+      const userWithEmailExists =
+        (await User.findOne({ email })) || (await Guest.findOne({ email }));
+
+      if (userWithEmailExists) {
+        return res
+          .status(400)
+          .json({ message: "Email already registered", status: false });
+      }
+    }
+
+    if (phone) {
+      const userWithPhoneExists =
+        (await User.findOne({ phone })) || (await Guest.findOne({ phone }));
+
+      if (userWithPhoneExists) {
+        return res
+          .status(400)
+          .json({ message: "Phone already registered", status: false });
+      }
+    }
+
     // Hash the password securely
     const hashedPassword = await hashPasswordSecurely(password);
 
@@ -42,10 +58,10 @@ router.post("/register", async (req: Request, res: Response) => {
       password: hashedPassword,
       phone,
     });
-    
+
     // Save the new guest user to the database
     await newGuest.save();
-    
+
     var token = jwt.sign(
       {
         _id: newGuest?._id,
@@ -55,12 +71,15 @@ router.post("/register", async (req: Request, res: Response) => {
         expiresIn: 86400,
       }
     );
-    res.status(201).json({ message: "Registered successfully",token:token, status:true });
+    res
+      .status(201)
+      .json({ message: "Registered successfully", token: token, status: true });
   } catch (error) {
     console.error("Registration error:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 });
+
 
 // Login Route
 router.post("/login", async (req: Request, res: Response) => {
