@@ -21,13 +21,12 @@ const guestSchema = new Schema({
     type: String,
     required: false,
   },
-  status: {
-    type: Boolean,
-    default: false,
-  },
   role: {
     type: String,
     default: "relative",
+  },
+  user_status: {
+    type: String,
   },
 });
 

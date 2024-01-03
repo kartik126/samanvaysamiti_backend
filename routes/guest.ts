@@ -58,7 +58,7 @@ router.post("/register", async (req: Request, res: Response) => {
       password: hashedPassword,
       phone,
       location,
-      status: false,
+      user_status : 'inactive',
       role: "relative",
     });
 
@@ -79,59 +79,6 @@ router.post("/register", async (req: Request, res: Response) => {
       .json({ message: "Registered successfully", token: token, status: true });
   } catch (error) {
     console.error("Registration error:", error);
-    res.status(500).json({ message: "Internal server error" });
-  }
-});
-
-
-// Login Route
-router.post("/login", async (req: Request, res: Response) => {
-  try {
-    const { emailOrPhone, password } = req.body;
-
-    // Check if emailOrPhone is a valid email or phone format
-    let user;
-    if (isValidEmail(emailOrPhone)) {
-      user = await Guest.findOne({ email: emailOrPhone });
-    } else if (isValidPhone(emailOrPhone)) {
-      user = await Guest.findOne({ phone: emailOrPhone });
-    } else {
-      return res
-        .status(400)
-        .json({ message: "Invalid email or phone format", status: false });
-    }
-
-    if (!user) {
-      return res.status(404).json({ message: "User not found", status: false });
-    }
-
-    const isPasswordValid = await comparePasswords(password, user.password);
-
-    if (isPasswordValid && user.status) {
-      var token = jwt.sign(
-        {
-          _id: user?._id,
-        },
-        process.env.API_SECRET as string,
-        {
-          expiresIn: 86400,
-        }
-      );
-      res
-        .status(200)
-        .json({ message: "Login successful", token: token, status: true });
-    } else if (!user.status) {
-      res
-        .status(401)
-        .json({
-          message: "You do not have an active account. Contact admin to activate your profile.",
-          status: false,
-        });
-    } else {
-      res.status(401).json({ message: "Invalid password", status: false });
-    }
-  } catch (error) {
-    console.error("Login error:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 });

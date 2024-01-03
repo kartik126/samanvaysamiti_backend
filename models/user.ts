@@ -21,11 +21,11 @@ let userSchema = new Schema({
     type: String,
   },
   downloaded_profiles_count: { type: Number, default: 0 },
-  downloadedProfiles:[{ type: Schema.Types.ObjectId, ref: 'User' }],
+  downloadedProfiles: [{ type: Schema.Types.ObjectId, ref: "User" }],
   call_profiles_count: { type: Number, default: 0 },
-  calledUsers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  calledUsers: [{ type: Schema.Types.ObjectId, ref: "User" }],
   whatsapp_profiles_count: { type: Number, default: 0 },
-  whatsappUsers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  whatsappUsers: [{ type: Schema.Types.ObjectId, ref: "User" }],
   personal_details: {
     fullname: {
       type: String,
@@ -222,6 +222,10 @@ let userSchema = new Schema({
   },
   user_status: {
     type: String,
+  },
+  role: {
+    type: String,
+    default: "user",
   },
   resetPasswordToken: {
     type: String,
