@@ -17,6 +17,18 @@ const guestSchema = new Schema({
     type: String,
     required: true,
   },
+  location: {
+    type: String,
+    required: false,
+  },
+  status: {
+    type: Boolean,
+    default: false,
+  },
+  role: {
+    type: String,
+    default: "relative",
+  },
 });
 
 const Guest = mongoose.model("Guest", guestSchema);

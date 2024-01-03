@@ -10,7 +10,7 @@ var router = express.Router();
 
 router.post("/register", async (req: Request, res: Response) => {
   try {
-    const { fullname, email, password, phone } = req.body;
+    const { fullname, email, password, phone,location } = req.body;
 
     // Validate email and phone formats
     if (email && !isValidEmail(email)) {
@@ -57,6 +57,9 @@ router.post("/register", async (req: Request, res: Response) => {
       email,
       password: hashedPassword,
       phone,
+      location,
+      status: false,
+      role: "relative",
     });
 
     // Save the new guest user to the database
@@ -103,17 +106,27 @@ router.post("/login", async (req: Request, res: Response) => {
     }
 
     const isPasswordValid = await comparePasswords(password, user.password);
-     var token = jwt.sign(
-       {
-         _id: user?._id,
-       },
-       process.env.API_SECRET as string,
-       {
-         expiresIn: 86400,
-       }
-     );
-    if (isPasswordValid) {
-      res.status(200).json({ message: "Login successful",token:token, status: true });
+
+    if (isPasswordValid && user.status) {
+      var token = jwt.sign(
+        {
+          _id: user?._id,
+        },
+        process.env.API_SECRET as string,
+        {
+          expiresIn: 86400,
+        }
+      );
+      res
+        .status(200)
+        .json({ message: "Login successful", token: token, status: true });
+    } else if (!user.status) {
+      res
+        .status(401)
+        .json({
+          message: "You do not have an active account. Contact admin to activate your profile.",
+          status: false,
+        });
     } else {
       res.status(401).json({ message: "Invalid password", status: false });
     }
@@ -122,6 +135,7 @@ router.post("/login", async (req: Request, res: Response) => {
     res.status(500).json({ message: "Internal server error" });
   }
 });
+
 
 function isValidEmail(input: string) {
   // Simple email validation
