@@ -58,7 +58,7 @@ router.post("/register", async (req: Request, res: Response) => {
       password: hashedPassword,
       phone,
       location,
-      user_status : 'inactive',
+      user_status : 'active',
       role: "relative",
     });
 
