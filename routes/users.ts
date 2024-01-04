@@ -15,6 +15,7 @@ import resetPassword from "../controllers/user-controller/resetPassword";
 import loginUser from "../controllers/user-controller/login";
 import emailCount from "../controllers/user-controller/userEmailCount";
 import telephoneCount from "../controllers/user-controller/telephoneCount";
+import editUser from "../controllers/user-controller/editUser";
 
 var express = require("express");
 var router = express.Router();
@@ -26,6 +27,8 @@ const upload = multer({ storage: storage, limits: { files: 5 } });
 
 router.post("/send-otp", sendOTP);
 router.post("/register", upload.array("photo", 5), addUser);
+router.post("/edit", verifyToken, upload.array("photo", 5), editUser);
+
 router.post("/verify-otp", verifyOTP);
 router.post("/signup-verify-otp", signupVerifyOTP);
 
