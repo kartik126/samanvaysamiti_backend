@@ -90,7 +90,7 @@ let addUser = async (req: Request, res: Response) => {
     const contactDetailsRequest = req.body.contact_details;
 
     const contactDetails = {
-      phone: contactDetailsRequest?.phone_number,
+      phone_number: contactDetailsRequest?.phone_number,
       email: contactDetailsRequest?.email,
       consanguineous_marriage: contactDetailsRequest?.consanguineous_marriage,
       mobile: contactDetailsRequest?.mobile,
