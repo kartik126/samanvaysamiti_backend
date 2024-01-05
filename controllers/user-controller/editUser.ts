@@ -15,10 +15,8 @@ const userSchema = z.object({
 
 let editUser = async (req: Request, res: Response) => {
   try {
-
-    console.log("id from toke================================>",req.body.user)
+    console.log("id from toke================================>", req.body.user);
     const userIdFromToken = req.body.user._id;
-    
 
     // Check if the user with the given userId exists
     const existingUser = await User.findById(userIdFromToken);
@@ -65,7 +63,7 @@ let editUser = async (req: Request, res: Response) => {
     if (imageBuffers) {
       photoUrls = await Promise.all(
         imageBuffers.map(
-          async (buffer) => await uploadToS3(requestBody?.email, buffer)
+          async (buffer) => await uploadToS3(userIdFromToken?.email, buffer)
         )
       );
     }
