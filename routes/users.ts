@@ -27,7 +27,7 @@ const upload = multer({ storage: storage, limits: { files: 5 } });
 
 router.post("/send-otp", sendOTP);
 router.post("/register", upload.array("photo", 5), addUser);
-router.post("/edit", verifyToken, upload.array("photo", 5), editUser);
+router.post("/edit", upload.array("photo", 5), verifyToken, editUser);
 
 router.post("/verify-otp", verifyOTP);
 router.post("/signup-verify-otp", signupVerifyOTP);

@@ -15,7 +15,10 @@ const userSchema = z.object({
 
 let editUser = async (req: Request, res: Response) => {
   try {
+
+    console.log("id from toke================================>",req.body.user)
     const userIdFromToken = req.body.user._id;
+    
 
     // Check if the user with the given userId exists
     const existingUser = await User.findById(userIdFromToken);
@@ -276,7 +279,7 @@ let editUser = async (req: Request, res: Response) => {
           existingUser.mothers_family_details?.mavsa,
       };
     }
-    
+
     await existingUser.save();
 
     return res.status(200).send({
