@@ -19,7 +19,7 @@ let editUser = async (req: Request, res: Response) => {
     const userIdFromToken = req.body.user._id;
 
     // Check if the user with the given userId exists
-    const existingUser = await User.findById(userIdFromToken);
+    const existingUser: any = await User.findById(userIdFromToken);
 
     if (!existingUser) {
       return res.status(404).json({ message: "User not found" });
@@ -63,12 +63,20 @@ let editUser = async (req: Request, res: Response) => {
     if (imageBuffers) {
       photoUrls = await Promise.all(
         imageBuffers.map(
-          async (buffer) => await uploadToS3(userIdFromToken?.email, buffer)
+          async (buffer) => await uploadToS3(existingUser?.email, buffer)
         )
       );
     }
 
+    console.log("photo==============>", photoUrls);
+
     const personalDetailsRequest = req.body.personal_details;
+
+    if (imageBuffers) {
+      existingUser.personal_details = {
+        photo: photoUrls || existingUser.personal_details?.photo,
+      };
+    }
 
     if (personalDetailsRequest) {
       existingUser.personal_details = {
@@ -78,7 +86,6 @@ let editUser = async (req: Request, res: Response) => {
         gender:
           personalDetailsRequest.gender ||
           existingUser.personal_details?.gender,
-        photo: photoUrls || existingUser.personal_details?.photo || [],
         birth_date:
           personalDetailsRequest.birth_date ||
           existingUser.personal_details?.birth_date,
@@ -282,7 +289,8 @@ let editUser = async (req: Request, res: Response) => {
 
     return res.status(200).send({
       message: "User updated successfully",
-      status:true
+      status: true,
+      user: existingUser,
     });
   } catch (e) {
     res.status(500).send(e);
