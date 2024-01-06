@@ -19,7 +19,7 @@ let editUser = async (req: Request, res: Response) => {
     const userIdFromToken = req.body.user._id;
 
     // Check if the user with the given userId exists
-    const existingUser: any = await User.findById(userIdFromToken);
+    const existingUser:any = await User.findById(userIdFromToken);
 
     if (!existingUser) {
       return res.status(404).json({ message: "User not found" });
@@ -68,51 +68,46 @@ let editUser = async (req: Request, res: Response) => {
       );
     }
 
-    console.log("photo==============>", photoUrls);
+    console.log("photo==============>",photoUrls)
 
     const personalDetailsRequest = req.body.personal_details;
 
-    if (imageBuffers) {
-      existingUser.personal_details = {
-        photo: photoUrls || existingUser.personal_details?.photo,
-      };
-    }
-
-    if (personalDetailsRequest) {
+    if (personalDetailsRequest || imageBuffers) {
       existingUser.personal_details = {
         fullname:
-          personalDetailsRequest.fullname ||
+          personalDetailsRequest?.fullname ||
           existingUser?.personal_details?.fullname,
         gender:
-          personalDetailsRequest.gender ||
+          personalDetailsRequest?.gender ||
           existingUser.personal_details?.gender,
+        photo: photoUrls || existingUser.personal_details?.photo,
         birth_date:
-          personalDetailsRequest.birth_date ||
+          personalDetailsRequest?.birth_date ||
           existingUser.personal_details?.birth_date,
         birth_name:
-          personalDetailsRequest.birth_name ||
+          personalDetailsRequest?.birth_name ||
           existingUser.personal_details?.birth_name,
         birth_time:
-          personalDetailsRequest.birth_time ||
+          personalDetailsRequest?.birth_time ||
           existingUser.personal_details?.birth_time,
         birth_place:
-          personalDetailsRequest.birth_place ||
+          personalDetailsRequest?.birth_place ||
           existingUser.personal_details?.birth_place,
         height:
-          personalDetailsRequest.height ||
+          personalDetailsRequest?.height ||
           existingUser.personal_details?.height,
         blood_group:
-          personalDetailsRequest.blood_group ||
+          personalDetailsRequest?.blood_group ||
           existingUser.personal_details?.blood_group,
         weight:
-          personalDetailsRequest.weight ||
+          personalDetailsRequest?.weight ||
           existingUser.personal_details?.weight,
         gotra:
-          personalDetailsRequest.gotra || existingUser.personal_details?.gotra,
+          personalDetailsRequest?.gotra || existingUser.personal_details?.gotra,
         kuldevi:
-          personalDetailsRequest.kuldevi ||
+          personalDetailsRequest?.kuldevi ||
           existingUser.personal_details?.kuldevi,
-        age: personalDetailsRequest.age || existingUser.personal_details?.age,
+        age: personalDetailsRequest?.age || existingUser.personal_details?.age,
       };
     }
 
@@ -121,16 +116,16 @@ let editUser = async (req: Request, res: Response) => {
     if (educationDetailsRequest) {
       existingUser.educational_details = {
         education_level:
-          educationDetailsRequest.education_level ||
+          educationDetailsRequest?.education_level ||
           existingUser.educational_details?.education_level,
         education_detail:
-          educationDetailsRequest.education_detail ||
+          educationDetailsRequest?.education_detail ||
           existingUser.educational_details?.education_detail,
         special_education:
-          educationDetailsRequest.special_education ||
+          educationDetailsRequest?.special_education ||
           existingUser.educational_details?.special_education,
         special_information:
-          educationDetailsRequest.special_information ||
+          educationDetailsRequest?.special_information ||
           existingUser.educational_details?.special_information,
       };
     }
@@ -139,28 +134,28 @@ let editUser = async (req: Request, res: Response) => {
     if (professionalDetailsRequest) {
       existingUser.professional_details = {
         profession:
-          professionalDetailsRequest.profession ||
+          professionalDetailsRequest?.profession ||
           existingUser.professional_details?.profession,
         job_title:
-          professionalDetailsRequest.job_title ||
+          professionalDetailsRequest?.job_title ||
           existingUser.professional_details?.job_title,
         company_name:
-          professionalDetailsRequest.company_name ||
+          professionalDetailsRequest?.company_name ||
           existingUser.professional_details?.company_name,
         work_city:
-          professionalDetailsRequest.work_city ||
+          professionalDetailsRequest?.work_city ||
           existingUser.professional_details?.work_city,
         job_address:
-          professionalDetailsRequest.job_address ||
+          professionalDetailsRequest?.job_address ||
           existingUser.professional_details?.job_address,
         weekly_holiday:
-          professionalDetailsRequest.weekly_holiday ||
+          professionalDetailsRequest?.weekly_holiday ||
           existingUser.professional_details?.weekly_holiday,
         monthly_income:
-          professionalDetailsRequest.monthly_income ||
+          professionalDetailsRequest?.monthly_income ||
           existingUser.professional_details?.monthly_income,
         payment_currency:
-          professionalDetailsRequest.payment_currency ||
+          professionalDetailsRequest?.payment_currency ||
           existingUser.professional_details?.payment_currency,
       };
     }
@@ -170,20 +165,20 @@ let editUser = async (req: Request, res: Response) => {
     if (contactDetailsRequest) {
       existingUser.contact_details = {
         phone_number:
-          contactDetailsRequest.phone_number ||
+          contactDetailsRequest?.phone_number ||
           existingUser.contact_details?.phone_number,
         email:
-          contactDetailsRequest.email || existingUser.contact_details?.email,
+          contactDetailsRequest?.email || existingUser.contact_details?.email,
         consanguineous_marriage:
-          contactDetailsRequest.consanguineous_marriage ||
+          contactDetailsRequest?.consanguineous_marriage ||
           existingUser.contact_details?.consanguineous_marriage,
         mobile:
-          contactDetailsRequest.mobile || existingUser.contact_details?.mobile,
+          contactDetailsRequest?.mobile || existingUser.contact_details?.mobile,
         current_address:
-          contactDetailsRequest.current_address ||
+          contactDetailsRequest?.current_address ||
           existingUser.contact_details?.current_address,
         partner_expectations:
-          contactDetailsRequest.partner_expectations ||
+          contactDetailsRequest?.partner_expectations ||
           existingUser.contact_details?.partner_expectations,
       };
     }
@@ -193,24 +188,24 @@ let editUser = async (req: Request, res: Response) => {
     if (familyDetailsRequest) {
       existingUser.family_details = {
         fathers_name:
-          familyDetailsRequest.fathers_name ||
+          familyDetailsRequest?.fathers_name ||
           existingUser.family_details?.fathers_name,
         guardians_profession:
-          familyDetailsRequest.guardians_profession ||
+          familyDetailsRequest?.guardians_profession ||
           existingUser.family_details?.guardians_profession,
         designation:
-          familyDetailsRequest.designation ||
+          familyDetailsRequest?.designation ||
           existingUser.family_details?.designation,
         address:
-          familyDetailsRequest.address || existingUser.family_details?.address,
+          familyDetailsRequest?.address || existingUser.family_details?.address,
         parents_phone:
-          familyDetailsRequest.parents_phone ||
+          familyDetailsRequest?.parents_phone ||
           existingUser.family_details?.parents_phone,
         mothers_name:
-          familyDetailsRequest.mothers_name ||
+          familyDetailsRequest?.mothers_name ||
           existingUser.family_details?.mothers_name,
         mothers_phone:
-          familyDetailsRequest.mothers_phone ||
+          familyDetailsRequest?.mothers_phone ||
           existingUser.family_details?.mothers_phone,
       };
     }
@@ -220,13 +215,13 @@ let editUser = async (req: Request, res: Response) => {
     if (brotherDetailsRequest) {
       existingUser.brothers_details = {
         brother_unmarried:
-          brotherDetailsRequest.brother_unmarried ||
+          brotherDetailsRequest?.brother_unmarried ||
           existingUser.brothers_details?.brother_unmarried,
         brother_married:
-          brotherDetailsRequest.brother_married ||
+          brotherDetailsRequest?.brother_married ||
           existingUser.brothers_details?.brother_married,
         father_in_law_name_phone:
-          brotherDetailsRequest.father_in_law_name_phone ||
+          brotherDetailsRequest?.father_in_law_name_phone ||
           existingUser.brothers_details?.father_in_law_name_phone,
       };
     }
@@ -236,13 +231,13 @@ let editUser = async (req: Request, res: Response) => {
     if (sisterDetailsRequest) {
       existingUser.sisters_details = {
         sisters_unmarried:
-          sisterDetailsRequest.sisters_unmarried ||
+          sisterDetailsRequest?.sisters_unmarried ||
           existingUser.sisters_details?.sisters_unmarried,
         sisters_married:
-          sisterDetailsRequest.sisters_married ||
+          sisterDetailsRequest?.sisters_married ||
           existingUser.sisters_details?.sisters_married,
         brothers_in_law_name_phone:
-          sisterDetailsRequest.brothers_in_law_name_phone ||
+          sisterDetailsRequest?.brothers_in_law_name_phone ||
           existingUser.sisters_details?.brothers_in_law_name_phone,
       };
     }
@@ -252,16 +247,16 @@ let editUser = async (req: Request, res: Response) => {
     if (fatherFamilyDetailsRequest) {
       existingUser.fathers_family_details = {
         grandfather_name:
-          fatherFamilyDetailsRequest.grandfather_name ||
+          fatherFamilyDetailsRequest?.grandfather_name ||
           existingUser.fathers_family_details?.grandfather_name,
         grandfather_village:
-          fatherFamilyDetailsRequest.grandfather_village ||
+          fatherFamilyDetailsRequest?.grandfather_village ||
           existingUser.fathers_family_details?.grandfather_village,
         kaka:
-          fatherFamilyDetailsRequest.kaka ||
+          fatherFamilyDetailsRequest?.kaka ||
           existingUser.fathers_family_details?.kaka,
         fuva:
-          fatherFamilyDetailsRequest.fuva ||
+          fatherFamilyDetailsRequest?.fuva ||
           existingUser.fathers_family_details?.fuva,
       };
     }
@@ -271,16 +266,16 @@ let editUser = async (req: Request, res: Response) => {
     if (motherFamilyDetailsRequest) {
       existingUser.mothers_family_details = {
         grandfather_name:
-          motherFamilyDetailsRequest.grandfather_name ||
+          motherFamilyDetailsRequest?.grandfather_name ||
           existingUser.mothers_family_details?.grandfather_name,
         grandfather_village:
-          motherFamilyDetailsRequest.grandfather_village ||
+          motherFamilyDetailsRequest?.grandfather_village ||
           existingUser.mothers_family_details?.grandfather_village,
         mama:
-          motherFamilyDetailsRequest.mama ||
+          motherFamilyDetailsRequest?.mama ||
           existingUser.mothers_family_details?.mama,
         mavsa:
-          motherFamilyDetailsRequest.mavsa ||
+          motherFamilyDetailsRequest?.mavsa ||
           existingUser.mothers_family_details?.mavsa,
       };
     }
@@ -289,8 +284,8 @@ let editUser = async (req: Request, res: Response) => {
 
     return res.status(200).send({
       message: "User updated successfully",
-      status: true,
-      user: existingUser,
+      status:true,
+      user:existingUser
     });
   } catch (e) {
     res.status(500).send(e);
