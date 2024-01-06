@@ -9,7 +9,7 @@ interface FileArray extends Array<Express.Multer.File> {}
 // Zod schema for request data validation
 const userSchema = z.object({
   phone: z.string().optional(),
-  email: z.string().email(),
+  email: z.string().email().optional(),
   password: z.string().optional(),
 });
 
@@ -282,7 +282,7 @@ let editUser = async (req: Request, res: Response) => {
 
     return res.status(200).send({
       message: "User updated successfully",
-      user: existingUser,
+      status:true
     });
   } catch (e) {
     res.status(500).send(e);
