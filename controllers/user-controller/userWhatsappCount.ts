@@ -7,54 +7,52 @@ import DailyStats from "../../models/DailyStats";
 const whatsappCount = async (req: Request, res: Response) => {
   const userId = req.body.user._id;
   const whatsappUserId = req.body.whatsappUserId;
+  const whatsappUserNumber = req.body.whatsappUserNumber;
 
   try {
-    // Check if there is a dailyStats document for today and the user
-    const today = new Date().setHours(0, 0, 0, 0);
-    let dailyStats = await DailyStats.findOne({ userId, date: today });
+    // No date constraint in the query
+    let dailyStats = await DailyStats.findOne({ userId });
 
     if (!dailyStats) {
-      // If no dailyStats document exists, create a new one
+      // If no document exists, create a new one
       dailyStats = new DailyStats({
         userId,
-        date: today,
       });
     }
 
-    // Check if the user has reached the WhatsApp limit for the day
     if (dailyStats.whatsappCount < 10) {
-      // Fetch information about the WhatsApp user
       const whatsappUser = await User.findById(whatsappUserId);
 
       if (whatsappUser) {
-        // Track WhatsApp users (if not already tracked)
         const whatsappUserInfo = {
           userId: whatsappUserId,
+          number:whatsappUserNumber,
           timestamp: new Date(),
         };
 
-        if (
-          !dailyStats.whatsappUsers.some(
-            (user) => user.userId && user.userId.toString() === whatsappUserId
-          )
-        ) {
+        // Check if the user is already tracked
+        const isUserTracked = dailyStats.whatsappUsers.some(
+          (user) =>
+            user.userId &&
+            user.userId.toString() === whatsappUserId &&
+            user.number === whatsappUserNumber
+        );
+
+        if (!isUserTracked) {
           dailyStats.whatsappUsers.push(whatsappUserInfo);
-          // Update the dailyStats document
           dailyStats.whatsappCount += 1;
         }
 
-        // Save the dailyStats document
         await dailyStats.save();
-
         res.json({ success: true });
       } else {
         res.json({ success: false, message: "WhatsApp user not found" });
       }
     } else {
       res.json({
-          success: false,
-          message: "WhatsApp limit exceeded for the day",
-        });
+        success: false,
+        message: "WhatsApp limit exceeded for the day",
+      });
     }
   } catch (error) {
     console.error(error);

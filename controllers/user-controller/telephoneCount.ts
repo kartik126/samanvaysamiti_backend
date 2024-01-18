@@ -7,17 +7,15 @@ import DailyStats from "../../models/DailyStats";
 const telephoneCount = async (req: Request, res: Response) => {
   const userId = req.body.user._id;
   const telephoneUserId = req.body.telephoneUserId; // Assuming you pass the telephone user's ID in the request
+  const telephoneUserNumber = req.body.telephoneUserNumber;
 
   try {
-    // Check if there is a dailyStats document for today and the user
-    const today = new Date().setHours(0, 0, 0, 0);
-    let dailyStats = await DailyStats.findOne({ userId, date: today });
+    let dailyStats = await DailyStats.findOne({ userId});
 
     if (!dailyStats) {
       // If no dailyStats document exists, create a new one
       dailyStats = new DailyStats({
-        userId,
-        date: today,
+        userId
       });
     }
 
@@ -30,12 +28,13 @@ const telephoneCount = async (req: Request, res: Response) => {
         // Track users who make telephone calls (if not already tracked)
         const telephoneUserInfo = {
           userId: telephoneUserId,
+          number:telephoneUserNumber,
           timestamp: new Date(),
         };
 
         if (
           !dailyStats.telephoneUsers.some(
-            (user) => user.userId && user.userId.toString() === telephoneUserId
+            (user) => user.userId && user.userId.toString() === telephoneUserId && user.number === telephoneUserNumber
           )
         ) {
           dailyStats.telephoneUsers.push(telephoneUserInfo);

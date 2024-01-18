@@ -58,6 +58,7 @@ let addUser = async (req: Request, res: Response) => {
       birth_time: personalDetailsRequest.birth_time,
       birth_place: personalDetailsRequest.birth_place,
       height: personalDetailsRequest.height,
+      height_cm: personalDetailsRequest.height_cm,
       blood_group: personalDetailsRequest.blood_group,
       weight: personalDetailsRequest.weight,
       gotra: personalDetailsRequest.gotra,

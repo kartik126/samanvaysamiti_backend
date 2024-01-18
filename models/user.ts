@@ -1,5 +1,10 @@
 import mongoose, { Error, Schema, SchemaTypes } from "mongoose";
 
+const contactCardSchema = new Schema({
+  type: { type: String, required: true }, // e.g., "father", "mother", "brother_in_law", etc.
+  contactCard: { type: Schema.Types.ObjectId, ref: "ContactCard" },
+});
+
 let userSchema = new Schema({
   serial_no: {
     type: String,
@@ -20,12 +25,12 @@ let userSchema = new Schema({
   referred_by: {
     type: String,
   },
-  downloaded_profiles_count: { type: Number, default: 0 },
-  downloadedProfiles: [{ type: Schema.Types.ObjectId, ref: "User" }],
-  call_profiles_count: { type: Number, default: 0 },
-  calledUsers: [{ type: Schema.Types.ObjectId, ref: "User" }],
-  whatsapp_profiles_count: { type: Number, default: 0 },
-  whatsappUsers: [{ type: Schema.Types.ObjectId, ref: "User" }],
+  // downloaded_profiles_count: { type: Number, default: 0 },
+  // downloadedProfiles: [{ type: Schema.Types.ObjectId, ref: "User" }],
+  // call_profiles_count: { type: Number, default: 0 },
+  // calledUsers: [{ type: Schema.Types.ObjectId, ref: "User" }],
+  // whatsapp_profiles_count: { type: Number, default: 0 },
+  // whatsappUsers: [{ type: Schema.Types.ObjectId, ref: "User" }],
   personal_details: {
     fullname: {
       type: String,
@@ -49,6 +54,9 @@ let userSchema = new Schema({
       type: String,
     },
     height: {
+      type: String,
+    },
+    height_cm: {
       type: String,
     },
     blood_group: {
@@ -130,9 +138,8 @@ let userSchema = new Schema({
     },
   },
   family_details: {
-    fathers_name: {
-      type: String,
-    },
+    father: {},
+    guardian: { type: String },
     guardians_profession: {
       type: String,
     },
@@ -142,17 +149,7 @@ let userSchema = new Schema({
     address: {
       type: String,
     },
-    parents_phone: {
-      type: String,
-      maxlength: 10,
-    },
-    mothers_name: {
-      type: String,
-    },
-    mothers_phone: {
-      type: String,
-      maxlength: 10,
-    },
+    mother: {},
   },
   brothers_details: {
     brother_unmarried: {
@@ -161,11 +158,8 @@ let userSchema = new Schema({
     brother_married: {
       type: String,
     },
-    father_in_law_name_phone: [
-      {
-        type: String,
-      },
-    ],
+    father_in_law: {},
+    brothers: {},
   },
   sisters_details: {
     sisters_unmarried: {
@@ -174,47 +168,30 @@ let userSchema = new Schema({
     sisters_married: {
       type: String,
     },
-    brothers_in_law_name_phone: [
-      {
-        type: String,
-      },
-    ],
+    brother_in_law: {},
+    sisters: {},
   },
   fathers_family_details: {
-    grandfather_name: {
-      type: String,
-    },
-    grandfather_village: {
-      type: String,
-    },
-    kaka: [
-      {
-        type: String,
-      },
-    ],
-    fuva: [
-      {
-        type: String,
-      },
-    ],
+    grandfather: {},
+    // grandfather_name: {
+    //   type: String,
+    // },
+    // grandfather_village: {
+    //   type: String,
+    // },
+    kaka: {},
+    fuva: {},
   },
   mothers_family_details: {
-    grandfather_name: {
-      type: String,
-    },
-    grandfather_village: {
-      type: String,
-    },
-    mama: [
-      {
-        type: String,
-      },
-    ],
-    mavsa: [
-      {
-        type: String,
-      },
-    ],
+    grandfather: {},
+    // grandfather_name: {
+    //   type: String,
+    // },
+    // grandfather_village: {
+    //   type: String,
+    // },
+    mama: {},
+    mavsa: {},
   },
   featured: {
     type: Boolean,
@@ -234,6 +211,9 @@ let userSchema = new Schema({
     type: Number,
   },
 });
+
+
+
 
 userSchema.pre("save", async function (next) {
   try {

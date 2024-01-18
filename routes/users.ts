@@ -16,6 +16,7 @@ import loginUser from "../controllers/user-controller/login";
 import emailCount from "../controllers/user-controller/userEmailCount";
 import telephoneCount from "../controllers/user-controller/telephoneCount";
 import editUser from "../controllers/user-controller/editUser";
+import getCity from "../controllers/user-controller/getCity";
 
 var express = require("express");
 var router = express.Router();
@@ -36,6 +37,7 @@ router.get("/get-profile", verifyToken, getProfile);
 router.get("/user-detail/:serialNo", getUser);
 router.post("/search-users", searchUsers);
 
+router.get("/get-city", getCity);
 router.post("/download-profile", verifyToken, downloadProfile);
 router.post("/call-profile", verifyToken, callCount);
 router.post("/whatsapp-profile", verifyToken, whatsappCount);

@@ -8,7 +8,7 @@ const requestBodySchema = z.object({
   blood_group: z.string().optional(),
   location: z.string().optional(),
   city: z.string().optional(),
-  profession: z.string().optional(),
+  profession: z.array(z.string()).optional(),
   gotra: z.array(z.string()).optional(),
   education_level_completed: z.array(z.string()).optional(),
   minSalary: z.number().optional(),
@@ -47,26 +47,31 @@ let searchUsers = async (req: Request, res: Response) => {
 
     const pipeline = [];
     
-    if (searchQuery) {
-      const searchMatch = {
-        $match: {
-          $or: [
-            { serial_no: searchQuery },
-            {
-              "personal_details.fullname": {
-                $regex: new RegExp(`${searchQuery}`, "i"),
-              },
+  if (searchQuery) {
+    const searchMatch = {
+      $match: {
+        $or: [
+          {
+            serial_no: {
+              $regex: new RegExp(`${searchQuery}`, "i"),
             },
-            {
-              "educational_details.education_detail": {
-                $regex: new RegExp(`${searchQuery}`, "i"),
-              },
+          },
+          {
+            "personal_details.fullname": {
+              $regex: new RegExp(`${searchQuery}`, "i"),
             },
-          ],
-        },
-      };
-      pipeline.push(searchMatch);
-    }
+          },
+          {
+            "professional_details.work_city": {
+              $regex: new RegExp(`${searchQuery}`, "i"),
+            },
+          },
+        ],
+      },
+    };
+    pipeline.push(searchMatch);
+  }
+
     if (minSalary !== undefined || maxSalary !== undefined) {
       const salaryMatch = {
         $match: {
@@ -250,7 +255,7 @@ let searchUsers = async (req: Request, res: Response) => {
     if (location !== undefined) {
       const locationMatch = {
         $match: {
-          "contact_details.current_address": {
+          "professional_details.work_city": {
             $regex: new RegExp(`${location}`, "i"),
           },
         },
@@ -258,11 +263,11 @@ let searchUsers = async (req: Request, res: Response) => {
       pipeline.push(locationMatch);
     }
 
-    if (profession !== undefined) {
+    if (profession !== undefined && profession.length > 0) {
       const professionMatch = {
         $match: {
           "professional_details.profession": {
-            $regex: new RegExp(`${profession}`, "i"),
+            $in: profession.map((g) => new RegExp(`^${g}$`, "i")),
           },
         },
       };

@@ -35,6 +35,7 @@ const dailyStatsSchema = new Schema({
     {
       _id: false,
       userId: { type: Schema.Types.ObjectId, ref: "User" },
+      number: { type: String },
       timestamp: { type: Date, default: Date.now },
     },
   ],
@@ -42,6 +43,7 @@ const dailyStatsSchema = new Schema({
     {
       _id: false,
       userId: { type: Schema.Types.ObjectId, ref: "User" },
+      number: { type: String },
       timestamp: { type: Date, default: Date.now },
     },
   ],
@@ -49,6 +51,7 @@ const dailyStatsSchema = new Schema({
     {
       _id: false,
       userId: { type: Schema.Types.ObjectId, ref: "User" },
+      email: { type: String },
       timestamp: { type: Date, default: Date.now },
     },
   ],
@@ -56,6 +59,7 @@ const dailyStatsSchema = new Schema({
     {
       _id: false,
       userId: { type: Schema.Types.ObjectId, ref: "User" },
+      number: { type: String },
       timestamp: { type: Date, default: Date.now },
     },
   ],
@@ -64,8 +68,8 @@ const dailyStatsSchema = new Schema({
       _id: false,
       userId: { type: Schema.Types.ObjectId, ref: "User" },
       timestamp: { type: Date, default: Date.now },
-      name: String,
-      serial_no: String,
+      name: {type: String},
+      serial_no: {type:String},
     },
   ],
 });

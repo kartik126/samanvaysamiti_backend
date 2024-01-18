@@ -9,15 +9,12 @@ const downloadProfile = async (req: Request, res: Response) => {
   const downloadedUserId = req.body.downloadedUserId; // Assuming you pass the downloaded user's ID in the request
 
   try {
-    // Check if there is a dailyStats document for today and the user
-    const today = new Date().setHours(0, 0, 0, 0);
-    let dailyStats = await DailyStats.findOne({ userId, date: today });
+    let dailyStats = await DailyStats.findOne({ userId });
 
     if (!dailyStats) {
       // If no dailyStats document exists, create a new one
       dailyStats = new DailyStats({
-        userId,
-        date: today,
+        userId
       });
     }
 
@@ -30,6 +27,8 @@ const downloadProfile = async (req: Request, res: Response) => {
         // Track users who download profiles (if not already tracked)
         const downloadedUserInfo = {
           userId: downloadedUserId,
+          name: downloadedUser.personal_details?.fullname,
+          serial_no: downloadedUser.serial_no,
           timestamp: new Date(),
         };
 

@@ -7,17 +7,15 @@ import DailyStats from "../../models/DailyStats";
 const callCount = async (req: Request, res: Response) => {
   const userId = req.body.user._id;
   const calledUserId = req.body.calledUserId;
+  const calledUserNumber = req.body.calledUserNumber;
 
   try {
-    // Check if there is a dailyStats document for today and the user
-    const today = new Date().setHours(0, 0, 0, 0);
-    let dailyStats = await DailyStats.findOne({ userId, date: today });
+    let dailyStats = await DailyStats.findOne({ userId });
 
     if (!dailyStats) {
       // If no dailyStats document exists, create a new one
       dailyStats = new DailyStats({
-        userId,
-        date: today,
+        userId
       });
     }
 
@@ -30,12 +28,13 @@ const callCount = async (req: Request, res: Response) => {
         // Track users called (if not already tracked)
         const calledUserInfo = {
           userId: calledUserId,
+          number : calledUserNumber,
           timestamp: new Date(),
         };
 
         if (
           !dailyStats.calledUsers.some(
-            (user) => user.userId && user.userId.toString() === calledUserId
+            (user) => user.userId && user.userId.toString() === calledUserId && user.number === calledUserNumber
           )
         ) {
           dailyStats.calledUsers.push(calledUserInfo);

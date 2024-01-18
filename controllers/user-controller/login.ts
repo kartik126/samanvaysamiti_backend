@@ -43,7 +43,7 @@ let loginUser = async (req: Request, res: Response) => {
         },
         process.env.API_SECRET as string,
         {
-          expiresIn: 86400,
+          expiresIn: 8640000,
         }
       );
       res

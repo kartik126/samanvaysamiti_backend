@@ -7,17 +7,15 @@ import DailyStats from "../../models/DailyStats";
 const emailCount = async (req: Request, res: Response) => {
   const userId = req.body.user._id;
   const emailUserId = req.body.emailUserId; // Assuming you pass the Email user's ID in the request
+  const calleduserEmail = req.body.calleduserEmail;
 
   try {
-    // Check if there is a dailyStats document for today and the user
-    const today = new Date().setHours(0, 0, 0, 0);
-    let dailyStats = await DailyStats.findOne({ userId, date: today });
+    let dailyStats = await DailyStats.findOne({ userId});
 
     if (!dailyStats) {
       // If no dailyStats document exists, create a new one
       dailyStats = new DailyStats({
         userId,
-        date: today,
       });
     }
 
@@ -29,12 +27,16 @@ const emailCount = async (req: Request, res: Response) => {
         // Track Email users (if not already tracked)
         const emailUserInfo = {
           userId: emailUserId,
+          email:calleduserEmail,
           timestamp: new Date(),
         };
 
         if (
           !dailyStats.emailUsers.some(
-            (user) => user.userId && user.userId.toString() === emailUserId
+            (user) =>
+              user.userId &&
+              user.userId.toString() === emailUserId &&
+              user.email === calleduserEmail
           )
         ) {
           dailyStats.emailUsers.push(emailUserInfo);
