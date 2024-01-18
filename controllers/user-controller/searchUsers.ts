@@ -16,8 +16,8 @@ const requestBodySchema = z.object({
   currency: z.string().optional(),
   minAge: z.number().optional(),
   maxAge: z.number().optional(),
-  minHeight: z.number().optional(),
-  maxHeight: z.number().optional(),
+  minHeight: z.string().optional(),
+  maxHeight: z.string().optional(),
   minWeight: z.number().optional(),
   maxWeight: z.number().optional(),
   searchQuery: z.string().optional(),
@@ -200,7 +200,7 @@ let searchUsers = async (req: Request, res: Response) => {
                       { $toDouble: maxAge },
                       {
                         $divide: [
-                          { $subtract: [new Date(), { $dateFromString: { dateString: "$personal_details.birth_date", format: "%d-%m-%Y" } }] },
+                          { $subtract: [new Date(), { $dateFromString: { dateString: "$personal_details.birth_date", format: "%Y-%m-%d" } }] },
                           31536000000, // milliseconds in a year
                         ],
                       },
@@ -216,7 +216,7 @@ let searchUsers = async (req: Request, res: Response) => {
                       { $toDouble: minAge },
                       {
                         $divide: [
-                          { $subtract: [new Date(), { $dateFromString: { dateString: "$personal_details.birth_date", format: "%d-%m-%Y" } }] },
+                          { $subtract: [new Date(), { $dateFromString: { dateString: "$personal_details.birth_date", format: "%Y-%m-%d" } }] },
                           31536000000, // milliseconds in a year
                         ],
                       },
