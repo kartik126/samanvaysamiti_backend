@@ -178,7 +178,7 @@ let editUser = async (req: Request, res: Response) => {
           contactDetailsRequest?.consanguineous_marriage ||
           existingUser.contact_details?.consanguineous_marriage,
         whatsapp:
-          contactDetailsRequest?.mobile || existingUser.contact_details?.whatsapp,
+          contactDetailsRequest?.whatsapp || existingUser.contact_details?.whatsapp,
         current_address:
           contactDetailsRequest?.current_address ||
           existingUser.contact_details?.current_address,
