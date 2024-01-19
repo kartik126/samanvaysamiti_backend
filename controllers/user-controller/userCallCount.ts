@@ -47,10 +47,10 @@ const callCount = async (req: Request, res: Response) => {
 
         res.json({ success: true });
       } else {
-        res.status(400).json({ success: false, message: "User not found" });
+        res.json({ success: false, message: "User not found" });
       }
     } else {
-      res.status(400).json({
+      res.json({
         success: false,
         message: `आपण दिवसाचे कॉल सीमा ओलांडली आहे, कृपया उदया पुन्हा प्रयत्न करा.${"\n"} You have exceeded the daily call limit, please try again Tomorrow.`,
       });
