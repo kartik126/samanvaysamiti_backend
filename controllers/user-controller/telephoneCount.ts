@@ -20,7 +20,7 @@ const telephoneCount = async (req: Request, res: Response) => {
     }
 
     // Check if the user has reached the telephone call limit for the day
-    if (dailyStats.telephoneCount < 10) {
+    if (dailyStats.telephoneCount < 20) {
       // Fetch information about the telephone user
       const telephoneUser = await User.findById(telephoneUserId);
 
@@ -51,9 +51,9 @@ const telephoneCount = async (req: Request, res: Response) => {
       }
     } else {
       res.json({
-          success: false,
-          message: "Telephone call limit exceeded for the day",
-        });
+        success: false,
+        message: `आपण दिवसाचे कॉल सीमा ओलांडली आहे, कृपया उदया पुन्हा प्रयत्न करा.${"\n"} You have exceeded the daily call limit, please try again Tomorrow.`,
+      });
     }
   } catch (error) {
     console.error(error);

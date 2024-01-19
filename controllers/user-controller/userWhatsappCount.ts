@@ -20,7 +20,7 @@ const whatsappCount = async (req: Request, res: Response) => {
       });
     }
 
-    if (dailyStats.whatsappCount < 10) {
+    if (dailyStats.whatsappCount < 20) {
       const whatsappUser = await User.findById(whatsappUserId);
 
       if (whatsappUser) {
@@ -51,7 +51,7 @@ const whatsappCount = async (req: Request, res: Response) => {
     } else {
       res.json({
         success: false,
-        message: "WhatsApp limit exceeded for the day",
+        message: `आपण दिवसाचे व्हॅट्सऍप सीमा ओलांडली आहे, कृपया उदया पुन्हा प्रयत्न करा.${'\n'} You have exceeded the daily whatsapp limit, please try again Tomorrow.`,
       });
     }
   } catch (error) {
