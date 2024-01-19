@@ -171,16 +171,14 @@ let editUser = async (req: Request, res: Response) => {
 
     if (contactDetailsRequest) {
       existingUser.contact_details = {
-        phone_number:
-          contactDetailsRequest?.phone_number ||
-          existingUser.contact_details?.phone_number,
-        email:
-          contactDetailsRequest?.email || existingUser.contact_details?.email,
+        telephone:
+          contactDetailsRequest?.telephone ||
+          existingUser.contact_details?.telephone,
         consanguineous_marriage:
           contactDetailsRequest?.consanguineous_marriage ||
           existingUser.contact_details?.consanguineous_marriage,
-        mobile:
-          contactDetailsRequest?.mobile || existingUser.contact_details?.mobile,
+        whatsapp:
+          contactDetailsRequest?.mobile || existingUser.contact_details?.whatsapp,
         current_address:
           contactDetailsRequest?.current_address ||
           existingUser.contact_details?.current_address,
