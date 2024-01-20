@@ -16,8 +16,8 @@ const requestBodySchema = z.object({
   currency: z.string().optional(),
   minAge: z.number().optional(),
   maxAge: z.number().optional(),
-  minHeight: z.string().optional(),
-  maxHeight: z.string().optional(),
+  minHeight: z.number().optional(),
+  maxHeight: z.number().optional(),
   minWeight: z.number().optional(),
   maxWeight: z.number().optional(),
   searchQuery: z.string().optional(),
@@ -148,43 +148,40 @@ let searchUsers = async (req: Request, res: Response) => {
       pipeline.push(weightMatch);
     }
 
-    if (minHeight !== undefined || maxHeight !== undefined) {
-      const heightMatch = {
-        $match: {
-          $and: [
-            {
-              $expr: {
-                $or: [
-                  { $eq: [minHeight, undefined] },
-                  { $eq: ["$personal_details.height", ""] },
-                  {
-                    $gte: [
-                      { $toDouble: "$personal_details.height" },
-                      minHeight,
-                    ],
-                  },
-                ],
+if (minHeight !== undefined || maxHeight !== undefined) {
+  const heightMatch = {
+    $match: {
+      $and: [
+        {
+          $expr: {
+            $or: [
+              { $eq: [minHeight, undefined] },
+              { $eq: ["$personal_details.height_cm", ""] },
+              {
+                $gte: [{ $toDouble: "$personal_details.height_cm" }, minHeight],
               },
-            },
-            {
-              $expr: {
-                $or: [
-                  { $eq: [maxHeight, undefined] },
-                  { $eq: ["$personal_details.height", ""] },
-                  {
-                    $lte: [
-                      { $toDouble: "$personal_details.height" },
-                      maxHeight,
-                    ],
-                  },
-                ],
-              },
-            },
-          ],
+            ],
+          },
         },
-      };
-      pipeline.push(heightMatch);
-    }
+        {
+          $expr: {
+            $or: [
+              { $eq: [maxHeight, undefined] },
+              { $eq: ["$personal_details.height_cm", ""] },
+              {
+                $lte: [{ $toDouble: "$personal_details.height_cm" }, maxHeight],
+              },
+            ],
+          },
+        },
+      ],
+    },
+  };
+  pipeline.push(heightMatch);
+}
+
+
+
 
 
     if (minAge !== undefined || maxAge !== undefined) {
