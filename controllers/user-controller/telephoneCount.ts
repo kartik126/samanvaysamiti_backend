@@ -34,12 +34,14 @@ const telephoneCount = async (req: Request, res: Response) => {
 
         if (
           !dailyStats.telephoneUsers.some(
-            (user) => user.userId && user.userId.toString() === telephoneUserId && user.number === telephoneUserNumber
+            (user) => user.userId && user.userId.toString() === telephoneUserId 
           )
         ) {
           dailyStats.telephoneUsers.push(telephoneUserInfo);
           // Update the dailyStats document
           dailyStats.telephoneCount += 1;
+        }else{
+          dailyStats.telephoneUsers.push(telephoneUserInfo);
         }
 
         // Save the dailyStats document

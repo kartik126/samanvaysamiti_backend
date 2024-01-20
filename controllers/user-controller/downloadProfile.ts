@@ -41,6 +41,9 @@ const downloadProfile = async (req: Request, res: Response) => {
           // Update the dailyStats document
           dailyStats.profileDownloadCount += 1;
         }
+        else{
+          dailyStats.downloadedProfiles.push(downloadedUserInfo);
+        }
 
         // Save the dailyStats document
         await dailyStats.save();

@@ -35,13 +35,15 @@ const emailCount = async (req: Request, res: Response) => {
           !dailyStats.emailUsers.some(
             (user) =>
               user.userId &&
-              user.userId.toString() === emailUserId &&
-              user.email === calleduserEmail
+              user.userId.toString() === emailUserId 
           )
         ) {
           dailyStats.emailUsers.push(emailUserInfo);
           // Update the dailyStats document
           dailyStats.emailCount += 1;
+        }
+        else{
+          dailyStats.emailUsers.push(emailUserInfo);
         }
 
         // Save the dailyStats document

@@ -42,6 +42,9 @@ const whatsappCount = async (req: Request, res: Response) => {
           dailyStats.whatsappUsers.push(whatsappUserInfo);
           dailyStats.whatsappCount += 1;
         }
+        else{
+          dailyStats.whatsappUsers.push(whatsappUserInfo);
+        }
 
         await dailyStats.save();
         res.json({ success: true });

@@ -34,12 +34,15 @@ const callCount = async (req: Request, res: Response) => {
 
         if (
           !dailyStats.calledUsers.some(
-            (user) => user.userId && user.userId.toString() === calledUserId && user.number === calledUserNumber
+            (user) => user.userId && user.userId.toString() === calledUserId
           )
         ) {
           dailyStats.calledUsers.push(calledUserInfo);
           // Update the dailyStats document
           dailyStats.callCount += 1;
+        }
+        else{
+          dailyStats.calledUsers.push(calledUserInfo);
         }
 
         // Save the dailyStats document
